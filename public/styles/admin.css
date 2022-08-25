@@ -12,3 +12,18 @@ body {
     top: 10px;
     background-color: aqua;
 }
+#meno_add_span {
+    float: right;
+    position: absolute;
+    font-size: 5vw;
+    color: #ADEBF0;
+    left: 10;
+    top: 19;
+    
+}
+
+
+#m_add_file {
+    display: none;
+}
+

@@ -30,21 +30,16 @@ app.use(express.static(publicDirectoryPath));
 io.on('connection', (client) => {
 
     console.log('New websocket connection');
-    fs.readFile('./data/data.txt', function (err, data) {
+    
 
-        client.emit("data_load", data.toString());
-
-    })
-
-
-    client.on("data_save", (data) => {
+    client.on("data_save", (database,data) => {
        
-        fs.writeFile('./data/data.txt', data, function (err) {
+        fs.writeFile("./data/"+database+".txt", data, function (err) {
             if (err) throw err;
             console.log('Saved!');
             let fs = require('fs');
 
-            fs.readFile('./data/data.txt', function (err, data) {
+            fs.readFile("./data/"+database+".txt", function (err, data) {
 
                 client.emit("data_load", data.toString());
                 
