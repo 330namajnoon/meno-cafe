@@ -31,7 +31,12 @@ io.on('connection', (client) => {
 
     console.log('New websocket connection');
     
-
+    client.on("data_load",(database,data)=> {
+        fs.readFile("./data/"+database+".txt", function (err, data) {
+            client.emit("data_load",database,data.toString());
+        })
+        
+    })
     client.on("data_save", (database,data) => {
        
         fs.writeFile("./data/"+database+".txt", data, function (err) {
@@ -41,7 +46,7 @@ io.on('connection', (client) => {
 
             fs.readFile("./data/"+database+".txt", function (err, data) {
 
-                client.emit("data_load", data.toString());
+                client.emit("data_load",database,data.toString());
                 
 
             })

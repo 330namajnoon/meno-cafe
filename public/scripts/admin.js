@@ -1,6 +1,20 @@
+////////////////////////
+////////////////////////
+//      data load     //
+////////////////////////
+////////////////////////
 let socket = io();
+let menolar = [];
 
 let meno_ekle;
+// socket.emit("data_save","menolar",JSON.stringify(meno_ekle));
+socket.emit("data_load","menolar");
+socket.on("data_load",(database,data)=> {
+    if (database == "menolar") {
+        menolar = JSON.parse(data);
+        console.log(menolar);
+    }
+})
 
 
 ////////////////////////
@@ -114,6 +128,7 @@ function MenoEkle () {
     this.m_add_paszamine_s.style.cssText = "position: relative;float: left;width: 90%;height: 40vw;background-color: #adebf000;margin-left: 5%;margin-top: 20%;",
     this.text = CrateElement("input","","m_add_text","","text");
     this.text.style.cssText = " position: absolute;font-size: 5vw;width: 98%;height: 12vw;border: solid .5vw "+colors.c_4+";padding: .2vw;background-color: "+colors.c_1+";color: "+colors.c_3+";top: 14vw;";
+    this.text.setAttribute("maxlength","20");
     this.file = CrateElement("input","","m_add_file","","file");
     this.lable = CrateElement("lable","","m_add_lable");
     this.lable.setAttribute("for","m_add_file");
@@ -129,11 +144,25 @@ function MenoEkle () {
     this.m_add_paszamine_s.style.marginTop = this.ekle_icon.getBoundingClientRect().height*2+"px";
     this.m_add_paszamine_s.style.height = AndazeBaraks(90,70)-this.ekle_icon.getBoundingClientRect().height*2+"px";
 
+    this.m_add_paszamine.addEventListener("touchend",(e)=> {
+        if (e.changedTouches[0].pageY < this.m_add_paszamine_s.getBoundingClientRect().y || e.changedTouches[0].pageY > this.m_add_paszamine_s.getBoundingClientRect().y+this.m_add_paszamine_s.getBoundingClientRect().height*1.5) {
+            this.m_add_paszamine.style.display = "none";
+        }
+        console.log(e.changedTouches[0].pageY)
+    })
     this.ekle_icon.addEventListener("click",(e)=> {
         e.stopPropagation();
         this.m_add_paszamine.style.display = "flex";
     })
-    this.button.addEventListener("click",()=> {
+    this.button.addEventListener("click",(e)=> {
+        e.stopPropagation();
+        let reder = new FileReader();
+        reder.addEventListener("load",()=> {
+            console.log(reder.result);
+        })
+        // reder.readAsDataURL(this.file.files)
+        menolar.push({meno_name: this.text.value,img: "121212ff"});
+        socket.emit("data_save","menolar",JSON.stringify(menolar));
         this.m_add_paszamine.style.display = "none";
     })
     
