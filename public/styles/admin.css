@@ -31,7 +31,7 @@ body {
 #meno_div {
     position: relative;
     width: 90%;
-    height: 40vw;
+    height: auto;
     margin-left: 5%;
     margin-top: 3vw;
     text-align: center;
@@ -42,21 +42,29 @@ body {
     height: 100%;
     object-fit: cover;
     border-radius: 5vw;
+    /* position: absolute; */
 
 }
 #meno_h1_div {
     background-color: #906a509e;
-    top: 13vw;
+    
+    
     position: absolute;
+    margin-bottom: 30vw;
     width: 100%;
     height: auto;
     text-align: center;
 }
 #meno_h1 {
+    background-color: #906a509e;
+    width: 100%;
     margin: 0;
     top: 0;
     font-size: 10vw;
    
     
+}
+hr {
+    position: absolute;
 }
 
