@@ -17,24 +17,25 @@ const io = socketio(server);
 const port = process.env.PORT || 4000;
 
 const publicDirectoryPath = path.join(__dirname, '/public');
-//////  save data
+
 const fs = require('fs');
 const frd = require('formidable');
 const filestore = require('fs-extra');
-/////  save image
+
 const multer = require('multer');
+/////  save image
 const storage = multer.diskStorage({
     destination: (req ,file,cd) => {
-        cd(null,'images');
+        cd(null,'./public/images');
     },
     filename: (req,file,cd) => {
-        console.log(file.filename);
-        cd(null,Date.now()+path.extname(file.originalname));
+        cd(null,file.originalname);
     }
 })
 const upload = multer({storage: storage});
+/////  save data
 
-app.post('/upload',upload.single('image'),(req,res) => {
+app.post('/upload_image',upload.single('image'),(req,res) => {
     res.send('image uploaded');
 })
 
@@ -52,7 +53,8 @@ io.on('connection', (client) => {
         
     })
     client.on("data_save", (database,data) => {
-       
+        
+
         fs.writeFile("./data/"+database+".txt", data, function (err) {
             if (err) throw err;
             console.log('Saved!');

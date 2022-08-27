@@ -20,14 +20,18 @@ let urunler_data = [];
 
 socket.on("data_load",(database,data)=> {
     if (database == "menolar") {
-        menolar_data = JSON.parse(data);
+        if(data != "") {
+            menolar_data = JSON.parse(data);
+        }
         console.log(menolar_data);
         paszamine_s.innerHTML = "";
         meno_ekle = new MenoEkle();
         menolar = new Menolar();
     }
     if (database == "urunler") {
-        urunler_data = JSON.parse(data);
+        if(data != "") {
+            urunler_data = JSON.parse(data);
+        }
         console.log(urunler_data);
         paszamine_s.innerHTML = "";
         urun_ekle = new UrunEkle();
@@ -58,6 +62,15 @@ function CratePaszamine() {
 //    acharfaranse    //
 ////////////////////////
 ////////////////////////
+function SerchId(id,element) {
+    let data;
+    element.forEach(e => {
+        if (e.id == id) {
+            data = e;
+        }
+    });
+    return data
+}
 function ID_ara(element) {
     let id;
     if(element.length > 0) {
@@ -191,13 +204,14 @@ function MenoEkle () {
     })
     this.button.addEventListener("click",(e)=> {
         e.stopPropagation();
-        let reder = new FileReader();
-        reder.addEventListener("load",()=> {
-            menolar_data.push({id: ID_ara(menolar_data),meno_name: this.text.value,img: reder.result});
-            socket.emit("data_save","menolar",JSON.stringify(menolar_data));
-            this.m_add_paszamine.style.display = "none";
-        })
-        reder.readAsDataURL(this.file.files[0]);
+        let data = new FormData();
+        data.append("image",this.file.files[0]);
+        let http = new XMLHttpRequest();
+        http.open("POST","/upload_image",true);
+        http.send(data);
+        menolar_data.push({id: ID_ara(menolar_data),meno_name: this.text.value,img: this.file.files[0].name});
+        socket.emit("data_save","menolar",JSON.stringify(menolar_data));
+        this.m_add_paszamine.style.display = "none";
     })
 }
 MenoEkle.prototype.Crate = function() {
@@ -214,7 +228,7 @@ function Meno(id_,name_,img_) {
     this.id = id_;
     this.paszamine = CrateElement("div","","meno_div");
     this.img = CrateElement("img","","meno_img");
-    this.img.src = img_;
+    this.img.src = "./images/"+img_;
     this.h1_div = CrateElement("div","","meno_h1_div");
     this.h1 = CrateElement("h1",name_,"meno_h1");
     this.h1.style.color = colors.c_3;
@@ -305,14 +319,16 @@ function UrunEkle () {
     })
     this.button.addEventListener("click",(e)=> {
         e.stopPropagation();
-        let reder = new FileReader();
-        reder.addEventListener("load",()=> {
-            urunler_data.push({id: ID_ara(urunler_data),meno_name: this.text.value,img: reder.result,aciklama: this.text_aciklama.value,fiyat: this.text_fiyat.value,meno_id: localStorage.getItem("meno_id")});
-            socket.emit("data_save","urunler",JSON.stringify(urunler_data));
-            console.log(urunler_data)
-            this.m_add_paszamine.style.display = "none";
-        })
-        reder.readAsDataURL(this.file.files[0]);
+        let data = new FormData();
+        data.append("image",this.file.files[0]);
+        let http = new XMLHttpRequest();
+        http.open("POST","/upload_image",true);
+        http.send(data);
+        urunler_data.push({id: ID_ara(urunler_data),meno_name: this.text.value,img: this.file.files[0].name,aciklama: this.text_aciklama.value,fiyat: this.text_fiyat.value,meno_id: localStorage.getItem("meno_id")});
+        console.log(urunler_data);
+        socket.emit("data_save","urunler",JSON.stringify(urunler_data));
+        this.m_add_paszamine.style.display = "none";
+        
     })
 }
 
@@ -336,7 +352,7 @@ function Urun(id_,name_,img_,aciklama_,fiyat_,meno_id_) {
     this.meno_id = meno_id_;
     this.paszamine = CrateElement("div","","meno_div");
     this.img = CrateElement("img","","meno_img");
-    this.img.src = img_;
+    this.img.src = "./images/"+img_;
     ///// urun adi
     
     this.h1_div = CrateElement("div","","meno_h1_div");
@@ -364,6 +380,8 @@ function Urun(id_,name_,img_,aciklama_,fiyat_,meno_id_) {
 
     this.paszamine.addEventListener("click",()=> {
         localStorage.setItem("urun_id",this.id);
+        paszamine_s.innerHTML = "";
+        urun_ekle = new Urunedit(SerchId(this.id,urunler_data));
     })
 }
 function Urunler() {
@@ -393,4 +411,107 @@ Urunler.prototype.Crate = function() {
         this.paszamine.appendChild(element.paszamine);
         
     });
+}
+
+function Urunedit (data) {
+    this.imgsrc = data.img;
+    this.m_add_paszamine = CrateElement("div","","m_add_paszamine");
+    this.m_add_paszamine.style.background = "url("+data.img+")";
+    this.m_add_paszamine.style.objectFit = "cover";
+    this.m_add_paszamine.style.cssText = "position: relative;width: 100%;height: 100%;background-color: rgba(255, 255, 255, 0.549);"
+    this.m_add_paszamine_s = CrateElement("form","","m_add_paszamine_s");
+    this.m_add_paszamine_s.style.cssText = "position: relative;float: left;width: 90%;height: auto;background-color: #adebf000;margin-left: 5%;margin-top: 20%;",
+
+    this.delete = CrateElement("input","","delete","","button");
+    this.delete.value = "Delete";
+    ////// urun adi
+    this.text = CrateElement("input","","m_add_text","","text");
+    this.text.value = data.meno_name;
+    this.text.style.cssText = "font-size: 5vw;width: 98%;height: 12vw;border: solid .5vw "+colors.c_4+";padding: .2vw;background-color: "+colors.c_1+";color: "+colors.c_3+";margin-top: 14vw;";
+    this.text.setAttribute("placeholder","Prodoct Name:........");
+    this.text.setAttribute("maxlength","20");
+    ///// urun aciklama
+    this.text_aciklama = CrateElement("input","","m_add_text","","text");
+    this.text_aciklama.value = data.aciklama;
+    this.text_aciklama.style.cssText = "font-size: 5vw;width: 98%;height: 12vw;border: solid .5vw "+colors.c_4+";padding: .2vw;background-color: "+colors.c_1+";color: "+colors.c_3+";margin-top: 1vw;";
+    this.text_aciklama.setAttribute("placeholder","Prodoct Description:.....");
+    ///// urun fiyat
+    this.text_fiyat = CrateElement("input","","m_add_text","","text");
+    this.text_fiyat.value = data.fiyat;
+    this.text_fiyat.style.cssText = "font-size: 5vw;width: 98%;height: 12vw;border: solid .5vw "+colors.c_4+";padding: .2vw;background-color: "+colors.c_1+";color: "+colors.c_3+";margin-top: 1vw;";
+    this.text_fiyat.setAttribute("placeholder","Price of the ptodoct:..");
+
+    this.file = CrateElement("input","","add_meno_file","","file");
+    this.lable = CrateElement("lable","","m_add_lable");
+    this.lable.setAttribute("for","add_meno_file");
+    this.lable.style.cssText = " position: absolute;width: 100%;height: 12vw;background-color: "+colors.c_1+";";
+    this.icon = CrateElement("span","add_photo_alternate","m_add_icon","material-symbols-rounded");
+    this.icon.style.cssText = "font-size: 12vw;color: "+colors.c_4+";margin-left: 40%;";
+    this.button = CrateElement("input","","m_add_button","","button");
+    this.button.value = "save";
+    this.button.style.cssText = "width: 100%;height: 13vw;background-color: "+colors.c_1+";color: "+colors.c_4+";font-size: 6vw;border: solid .5vw "+colors.c_4+";margin-top: 1vw;";
+    
+    this.Crate();
+    this.m_add_paszamine_s.style.marginTop = innerHeight/3+"px";
+    this.m_add_paszamine_s.style.height = AndazeBaraks(90,70)-innerHeight/3+"px";
+
+    this.lable.addEventListener("click",(e)=> {
+        this.file.click();
+    })
+    this.delete.addEventListener("click",(e)=> {
+        e.stopPropagation();
+        let id = localStorage.getItem("urun_id");
+        let sira = 0;
+        urunler_data.forEach(e => {
+            if(e.id == id) {
+                urunler_data.splice(sira,1);
+                for (let index = 0; index < urunler_data.length; index++) {
+                    urunler_data[index].id = index
+                }
+                
+            }
+        });
+        socket.emit("data_save","urunler",JSON.stringify(urunler_data));
+    })
+   
+    this.button.addEventListener("click",(e)=> {
+        e.stopPropagation();
+        if (this.file.files.length > 0) {
+        let data = new FormData();
+        data.append("image",this.file.files[0]);
+        let http = new XMLHttpRequest();
+        http.open("POST","/upload_image",true);
+        http.send(data);
+        }
+        let sira = 0;
+        urunler_data.forEach(e => {
+            
+            if(Number(e.id) == Number(localStorage.getItem("urun_id"))&& this.file.files.length < 1) {
+                urunler_data[sira] = {id: e.id,meno_name: this.text.value,img: this.imgsrc,aciklama: this.text_aciklama.value,fiyat: this.text_fiyat.value,meno_id: localStorage.getItem("meno_id")}
+
+                console.log(e);
+            }
+            if(Number(e.id) == Number(localStorage.getItem("urun_id"))&& this.file.files.length > 0) {
+                urunler_data[sira]  = {id: e.id,meno_name: this.text.value,img: this.file.files[0].name,aciklama: this.text_aciklama.value,fiyat: this.text_fiyat.value,meno_id: localStorage.getItem("meno_id")}
+            }
+            sira++;
+        });
+        console.log(urunler_data);
+        socket.emit("data_save","urunler",JSON.stringify(urunler_data));
+        this.m_add_paszamine.style.display = "none";
+        
+    })
+}
+
+Urunedit.prototype.Crate = function() {
+    paszamine_s.appendChild(this.m_add_paszamine);
+    this.m_add_paszamine.appendChild(this.m_add_paszamine_s);
+    this.m_add_paszamine_s.appendChild(this.delete);
+    this.m_add_paszamine_s.appendChild(this.file);
+    this.m_add_paszamine_s.appendChild(this.lable);
+    this.m_add_paszamine_s.appendChild(this.text);
+    this.m_add_paszamine_s.appendChild(this.text_aciklama);
+    this.m_add_paszamine_s.appendChild(this.text_fiyat);
+    this.m_add_paszamine_s.appendChild(this.button);
+    this.lable.appendChild(this.icon);
 }

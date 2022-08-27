@@ -68,3 +68,15 @@ hr {
     position: absolute;
 }
 
+#delete {
+    z-index: 1;
+    margin-top: -30%;
+    position: absolute;
+    width: 50%;
+    margin-left: 25%;
+    height: 10vw;
+    background-color: red;
+    border: solid 0 ;
+    
+}
+
