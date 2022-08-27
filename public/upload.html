@@ -8,11 +8,19 @@
 </head>
 <body>
     <form action="/upload" method="post" enctype="multipart/form-data">
-        <input type="file" name="image">
-        <input type="submit">
+        <input id="file" type="file" name="image">
+        <input onclick="saveimage()" type="button">
     </form>
 </body>
     <script>
-        
+        function saveimage() {
+            console.log("salam")
+            let image = document.getElementById("file").files[0];
+            let formdata = new FormData();
+            formdata.append("image",image)
+            let http = new XMLHttpRequest();
+            http.open("POST","/upload",true);
+            http.send(formdata);
+        }
     </script>
 </html>

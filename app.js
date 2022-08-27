@@ -17,18 +17,18 @@ const io = socketio(server);
 const port = process.env.PORT || 4000;
 
 const publicDirectoryPath = path.join(__dirname, '/public');
-
+//////  save data
 const fs = require('fs');
 const frd = require('formidable');
 const filestore = require('fs-extra');
-
+/////  save image
 const multer = require('multer');
 const storage = multer.diskStorage({
     destination: (req ,file,cd) => {
         cd(null,'images');
     },
     filename: (req,file,cd) => {
-        console.log(file);
+        console.log(file.filename);
         cd(null,Date.now()+path.extname(file.originalname));
     }
 })
