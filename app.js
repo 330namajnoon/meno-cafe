@@ -22,7 +22,21 @@ const fs = require('fs');
 const frd = require('formidable');
 const filestore = require('fs-extra');
 
+const multer = require('multer');
+const storage = multer.diskStorage({
+    destination: (req ,file,cd) => {
+        cd(null,'images');
+    },
+    filename: (req,file,cd) => {
+        console.log(file);
+        cd(null,Date.now()+path.extname(file.originalname));
+    }
+})
+const upload = multer({storage: storage});
 
+app.post('/upload',upload.single('image'),(req,res) => {
+    res.send('image uploaded');
+})
 
 
 app.use(express.static(publicDirectoryPath));
@@ -64,6 +78,7 @@ io.on('connection', (client) => {
     });
 
 })
+
 
 server.listen(port, () => {
 
