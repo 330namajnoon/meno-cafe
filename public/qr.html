@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>qrcode</title>
+    <style>
+        #img {
+            width: 100%;
+        }
+    </style>
+</head>
+<body id="body">
+    <script src="socket.io/socket.io.js"></script>
+    <script>
+        let img = document.createElement("img");
+        img.id = "img";
+        let socket = io();
+        let id = location.search;
+        let id1 = id.replace("?url=","");
+        console.log(id1);
+        let qr_data = [];
+        socket.emit("data_load","qrcodes");
+        socket.on("data_load",(database,data) => {
+            qr_data = JSON.parse(data);
+            qr_data.forEach(element => {
+                if (Number(element.id) == Number(id1) ) {
+                    img.src = element.url;
+                    document.getElementById("body").appendChild(img);
+                    img.addEventListener("load",(e) => {
+                        console.log(e)
+                        print()
+                    })
+                    
+                }
+            });
+        })
+    </script>
+</body>
+</html>

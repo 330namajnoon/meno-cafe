@@ -3,15 +3,45 @@ body {
     margin: 0;
     overflow: hidden;
 }
-
-#test {
-    position: absolute;
-    width: 10px;
-    height: 10px;
-    left: 10px;
-    top: 10px;
-    background-color: aqua;
+#test5 {
+    top: 20%;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
 }
+#test {
+  position: absolute;font-size: 10vw;color: red;top: 0;left: 0;
+  float: left;
+  display: grid;
+}
+#test1 {
+    width: 100%;
+    border-radius: 5vw;
+}
+#test2 {
+    top: 0;
+    position: absolute;
+    width: 100%;
+    height: auto;
+    background-color: aliceblue;
+    text-align: center;
+}
+#test3 {
+    color: aqua;
+    font-size: 10vw;
+    margin: 0;
+
+}
+#test4 {
+    position: absolute;
+    font-size: 10vw;
+    color: rgb(255, 0, 0);
+    left: 2%;
+    top: 2%;
+
+}
+
 #meno_add_span {
     float: right;
     position: absolute;

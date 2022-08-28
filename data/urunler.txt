@@ -1,1 +1,1 @@
-[]
+[{"id":1,"meno_name":"yakh dar behesht","img":"soguk-icecekler.webp","aciklama":"limonlu","fiyat":"2","meno_id":"3"},{"id":2,"meno_name":"sina","img":"tadal-pastanesi.jpg","aciklama":"feri","fiyat":"10","meno_id":"1"}]

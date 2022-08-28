@@ -2,9 +2,8 @@
 ////////////////////////
 //     elements       //
 ////////////////////////
-
-
 ////////////////////////
+let user = JSON.parse(localStorage.getItem("user"));
 let meno_ekle,menolar,urun_ekle,urunler,qrcodes;
 
 
@@ -19,7 +18,7 @@ let urunler_data = [];
 let qrcods_data = [];
 
 
-// socket.emit("data_load","menolar");
+socket.emit("data_load",""+user.imail+user.lisens+"qrcodes");
 
 socket.on("data_load",(database,data)=> {
     if (database == "menolar") {
@@ -39,6 +38,14 @@ socket.on("data_load",(database,data)=> {
         paszamine_s.innerHTML = "";
         urun_ekle = new UrunEkle();
         urunler = new Urunler();
+    }
+    if (database == "qrcodes") {
+        if(data != "") {
+            qrcods_data = JSON.parse(data);
+        }
+        console.log(qrcods_data);
+        paszamine_s.innerHTML = "";
+        qrcodes = new QrCodEkle();
     }
 })
 
@@ -68,27 +75,15 @@ function CratePaszamine() {
 function araye_element_remove(element,id,method) {
     let data = [];
     let sira = 1;
-    if (method == "id") {
+    
         element.forEach(e => {
-            if (Number(e.id) !== Number(id)) {
+            if (Number(e[method]) !== Number(id)) {
                 let e_ = e;
                 e_.id = sira;
                 data.push(e_);
                 sira++
             }
         });
-    }
-    if (method == "meno_id") {
-        element.forEach(e => {
-            if (Number(e.meno_id) !== Number(id)) {
-                let e_ = e;
-                e_.id = sira;
-                data.push(e_);
-                sira++
-            }
-        });
-    }
-   
     return data;
 }
 function SerchId(id,element) {
@@ -169,6 +164,9 @@ function NavarAbzar() {
     this.meno_add.addEventListener("click",()=> {
         socket.emit("data_load","menolar");
     })
+    this.qrcodes.addEventListener("click",()=> {
+        socket.emit("data_load","qrcodes");
+    })
     this.Crate();
 }
 NavarAbzar.prototype.Crate = function() {
@@ -208,8 +206,10 @@ function MenoEkle () {
     this.lable = CrateElement("lable","","m_add_lable");
     this.lable.setAttribute("for","add_meno_file");
     this.lable.style.cssText = " position: absolute;width: 100%;height: 12vw;background-color: "+colors.c_1+";";
+    this.uploding = CrateElement("div","");
+    this.uploding.style.cssText = " position: absolute;width: 0%;height: 12vw;background-color: "+colors.c_4+";";
     this.icon = CrateElement("span","add_photo_alternate","m_add_icon","material-symbols-rounded");
-    this.icon.style.cssText = "font-size: 12vw;color: "+colors.c_4+";margin-left: 40%;";
+    this.icon.style.cssText = "position: absolute;font-size: 12vw;color: "+colors.c_4+";margin-left: 40%;";
     this.button = CrateElement("input","","m_add_button","","button");
     this.button.value = "save";
     this.button.style.cssText = " position: absolute;width: 100%;height: 13vw;background-color: "+colors.c_1+";color: "+colors.c_4+";font-size: 6vw;border: solid .5vw "+colors.c_4+";top: 30vw;";
@@ -223,6 +223,7 @@ function MenoEkle () {
         this.file.click();
     })
     this.m_add_paszamine.addEventListener("touchend",(e)=> {
+        e.stopPropagation();
         if (e.changedTouches[0].pageY < this.m_add_paszamine_s.getBoundingClientRect().y || e.changedTouches[0].pageY > this.m_add_paszamine_s.getBoundingClientRect().y+this.m_add_paszamine_s.getBoundingClientRect().height*1.5) {
             this.m_add_paszamine.style.display = "none";
         }
@@ -231,16 +232,28 @@ function MenoEkle () {
         e.stopPropagation();
         this.m_add_paszamine.style.display = "flex";
     })
-    this.button.addEventListener("click",(e)=> {
-        e.stopPropagation();
+    this.file.addEventListener("change",(e) => {
         let data = new FormData();
         data.append("image",this.file.files[0]);
         let http = new XMLHttpRequest();
         http.open("POST","/upload_image",true);
+        http.upload.addEventListener("progress",({loaded,total}) => {
+            let fileloaded = Math.floor(loaded/total*100);
+            let totall = Math.floor(total*1000);
+            this.uploding.style.width = fileloaded + "%";
+            this.icon.style.color = colors.c_1;
+            console.log(fileloaded,totall)
+        })
         http.send(data);
-        menolar_data.push({id: ID_ara(menolar_data),meno_name: this.text.value,img: this.file.files[0].name});
-        socket.emit("data_save","menolar",JSON.stringify(menolar_data));
-        this.m_add_paszamine.style.display = "none";
+    })
+    this.button.addEventListener("click",(e)=> {
+        e.stopPropagation();
+        if (this.file.files.length > 0 && this.text.value !== "") {
+            menolar_data.push({id: ID_ara(menolar_data),meno_name: this.text.value,img: this.file.files[0].name});
+            socket.emit("data_save","menolar",JSON.stringify(menolar_data));
+            this.m_add_paszamine.style.display = "none";
+        }
+       
     })
 }
 MenoEkle.prototype.Crate = function() {
@@ -251,6 +264,7 @@ MenoEkle.prototype.Crate = function() {
     this.m_add_paszamine_s.appendChild(this.lable);
     this.m_add_paszamine_s.appendChild(this.text);
     this.m_add_paszamine_s.appendChild(this.button);
+    this.lable.appendChild(this.uploding);
     this.lable.appendChild(this.icon);
 }
 function Meno(id_,name_,img_) {
@@ -325,8 +339,10 @@ function Menoedit (data) {
     this.lable = CrateElement("lable","","m_add_lable");
     this.lable.setAttribute("for","add_meno_file");
     this.lable.style.cssText = " position: absolute;width: 100%;height: 12vw;background-color: "+colors.c_1+";";
+    this.uploding = CrateElement("div","");
+    this.uploding.style.cssText = " position: absolute;width: 0%;height: 12vw;background-color: "+colors.c_4+";";
     this.icon = CrateElement("span","add_photo_alternate","m_add_icon","material-symbols-rounded");
-    this.icon.style.cssText = "font-size: 12vw;color: "+colors.c_4+";margin-left: 40%;";
+    this.icon.style.cssText = "position:absolute;font-size: 12vw;color: "+colors.c_4+";margin-left: 40%;";
     this.button = CrateElement("input","","m_add_button","","button");
     this.button.value = "save";
     this.button.style.cssText = "width: 100%;height: 13vw;background-color: "+colors.c_1+";color: "+colors.c_4+";font-size: 6vw;border: solid .5vw "+colors.c_4+";margin-top: 1vw;";
@@ -346,16 +362,24 @@ function Menoedit (data) {
         socket.emit("data_save","urunler",JSON.stringify(urunler_data));
         socket.emit("data_save","menolar",JSON.stringify(menolar_data));
     })
+    this.file.addEventListener("change",()=>{
+        let data = new FormData();
+            data.append("image",this.file.files[0]);
+            let http = new XMLHttpRequest();
+            http.open("POST","/upload_image",true);
+            http.upload.addEventListener("progress",({loaded,total})=> {
+                let filelaoded = Math.floor(loaded/total*100);
+                this.uploding.style.width = filelaoded +"%";
+                this.icon.style.color = colors.c_1;
+            })
+            http.send(data);
+            
+
+    })
    
     this.button.addEventListener("click",(e)=> {
         e.stopPropagation();
-        if (this.file.files.length > 0) {
-        let data = new FormData();
-        data.append("image",this.file.files[0]);
-        let http = new XMLHttpRequest();
-        http.open("POST","/upload_image",true);
-        http.send(data);
-        }
+        
         let sira = 0;
         menolar_data.forEach(e => {
             
@@ -382,6 +406,7 @@ Menoedit.prototype.Crate = function() {
     this.m_add_paszamine_s.appendChild(this.lable);
     this.m_add_paszamine_s.appendChild(this.text);
     this.m_add_paszamine_s.appendChild(this.button);
+    this.lable.appendChild(this.uploding);
     this.lable.appendChild(this.icon);
 }
 
@@ -417,8 +442,10 @@ function UrunEkle () {
     this.lable = CrateElement("lable","","m_add_lable");
     this.lable.setAttribute("for","add_meno_file");
     this.lable.style.cssText = " position: absolute;width: 100%;height: 12vw;background-color: "+colors.c_1+";";
+    this.uploding = CrateElement("div","");
+    this.uploding.style.cssText = " position: absolute;width: 0%;height: 12vw;background-color: "+colors.c_4+";";
     this.icon = CrateElement("span","add_photo_alternate","m_add_icon","material-symbols-rounded");
-    this.icon.style.cssText = "font-size: 12vw;color: "+colors.c_4+";margin-left: 40%;";
+    this.icon.style.cssText = "position: absolute;font-size: 12vw;color: "+colors.c_4+";margin-left: 40%;";
     this.button = CrateElement("input","","m_add_button","","button");
     this.button.value = "save";
     this.button.style.cssText = "width: 100%;height: 13vw;background-color: "+colors.c_1+";color: "+colors.c_4+";font-size: 6vw;border: solid .5vw "+colors.c_4+";margin-top: 1vw;";
@@ -438,6 +465,7 @@ function UrunEkle () {
         this.file.click();
     })
     this.m_add_paszamine.addEventListener("touchend",(e)=> {
+        e.stopPropagation();
         if (e.changedTouches[0].pageY < this.m_add_paszamine_s.getBoundingClientRect().y || e.changedTouches[0].pageY > this.button.getBoundingClientRect().y+this.button.getBoundingClientRect().height*1.5) {
             this.m_add_paszamine.style.display = "none";
         }
@@ -446,17 +474,27 @@ function UrunEkle () {
         e.stopPropagation();
         this.m_add_paszamine.style.display = "flex";
     })
-    this.button.addEventListener("click",(e)=> {
-        e.stopPropagation();
+    this.file.addEventListener("change",(e)=> {
         let data = new FormData();
         data.append("image",this.file.files[0]);
         let http = new XMLHttpRequest();
         http.open("POST","/upload_image",true);
+        http.upload.addEventListener("progress",({loaded,total})=> {
+            let filelaoded = Math.floor(loaded/total*100);
+            let totall = Math.floor(total/1000);
+            this.uploding.style.width = filelaoded + "%";
+            this.icon.style.color = colors.c_1;
+        })
         http.send(data);
+    })
+    this.button.addEventListener("click",(e)=> {
+        e.stopPropagation();
+        if(this.file.files.length > 0 && this.text.value !== "" && this.text_aciklama.value !== "",this.text_fiyat.value !== "") {
         urunler_data.push({id: ID_ara(urunler_data),meno_name: this.text.value,img: this.file.files[0].name,aciklama: this.text_aciklama.value,fiyat: this.text_fiyat.value,meno_id: localStorage.getItem("meno_id")});
         console.log(urunler_data);
         socket.emit("data_save","urunler",JSON.stringify(urunler_data));
         this.m_add_paszamine.style.display = "none";
+        }
         
     })
 }
@@ -472,6 +510,7 @@ UrunEkle.prototype.Crate = function() {
     this.m_add_paszamine_s.appendChild(this.text_aciklama);
     this.m_add_paszamine_s.appendChild(this.text_fiyat);
     this.m_add_paszamine_s.appendChild(this.button);
+    this.lable.appendChild(this.uploding);
     this.lable.appendChild(this.icon);
 }
 function Urun(id_,name_,img_,aciklama_,fiyat_,meno_id_) {
@@ -575,8 +614,10 @@ function Urunedit (data) {
     this.lable = CrateElement("lable","","m_add_lable");
     this.lable.setAttribute("for","add_meno_file");
     this.lable.style.cssText = " position: absolute;width: 100%;height: 12vw;background-color: "+colors.c_1+";";
+    this.uploding = CrateElement("div","");
+    this.uploding.style.cssText = " position: absolute;width: 0%;height: 12vw;background-color: "+colors.c_4+";";
     this.icon = CrateElement("span","add_photo_alternate","m_add_icon","material-symbols-rounded");
-    this.icon.style.cssText = "font-size: 12vw;color: "+colors.c_4+";margin-left: 40%;";
+    this.icon.style.cssText = " position: absolute;font-size: 12vw;color: "+colors.c_4+";margin-left: 40%;";
     this.button = CrateElement("input","","m_add_button","","button");
     this.button.value = "save";
     this.button.style.cssText = "width: 100%;height: 13vw;background-color: "+colors.c_1+";color: "+colors.c_4+";font-size: 6vw;border: solid .5vw "+colors.c_4+";margin-top: 1vw;";
@@ -594,16 +635,22 @@ function Urunedit (data) {
         urunler_data = araye_element_remove(urunler_data,id,"id");
         socket.emit("data_save","urunler",JSON.stringify(urunler_data));
     })
-   
-    this.button.addEventListener("click",(e)=> {
-        e.stopPropagation();
-        if (this.file.files.length > 0) {
+
+    this.file.addEventListener("change",()=> {
         let data = new FormData();
         data.append("image",this.file.files[0]);
         let http = new XMLHttpRequest();
         http.open("POST","/upload_image",true);
+        http.upload.addEventListener("progress",({loaded,total})=> {
+            let filelaoded = Math.floor(loaded/total*100);
+            this.uploding.style.width = filelaoded + "%";
+            this.icon.style.color = colors.c_1;
+        })
         http.send(data);
-        }
+    })
+   
+    this.button.addEventListener("click",(e)=> {
+        e.stopPropagation();
         let sira = 0;
         urunler_data.forEach(e => {
             
@@ -633,6 +680,7 @@ Urunedit.prototype.Crate = function() {
     this.m_add_paszamine_s.appendChild(this.text_aciklama);
     this.m_add_paszamine_s.appendChild(this.text_fiyat);
     this.m_add_paszamine_s.appendChild(this.button);
+    this.lable.appendChild(this.uploding);
     this.lable.appendChild(this.icon);
 }
 
@@ -642,6 +690,38 @@ Urunedit.prototype.Crate = function() {
 ////////////////////////
 ////////////////////////
 function QrCodEkle() {
+    function qr(name,url,id) {
+        this.id = id;
+        this.url = url;
+        this.name = name;
+        this.paszamine = CrateElement("div","");
+        this.paszamine.style.cssText = "position: relative; width: 60%;height: auto;margin-left: 15%;margin-top: 4vw"
+        this.qr = CrateElement("img","");
+        this.qr.style.cssText = "width: 100%;border-radius: 10vw;"
+        this.qr.src = this.url;
+        this.h1_div = CrateElement("div","");
+        this.h1_div.style.cssText = " top: 40%;position: absolute;width: 100%;height: auto;background-color: "+colors.c_3+";text-align: center;"
+        this.h1 = CrateElement("h1",""+this.name+"");
+        this.h1.style.cssText = "color: "+colors.c_1+";font-size: 10vw;margin: 0;"
+        this.span = CrateElement("span","delete","","material-symbols-rounded");
+        this.span.style.cssText = " position: absolute;font-size: 10vw;color: "+colors.c_3+";left: 110%;top: 41%;"
+        this.paszamine.addEventListener("click",(e)=> {
+            e.stopPropagation();
+            open("qr.html?url="+this.id+"");
+        })
+        this.span.addEventListener("click",(e)=> {
+            e.stopPropagation();
+            qrcods_data = araye_element_remove(qrcods_data,this.id,"id");
+            socket.emit("data_save","qrcodes",JSON.stringify(qrcods_data));
+        })
+        this.Crate();
+    }
+    qr.prototype.Crate = function() {
+        this.paszamine.appendChild(this.qr);
+        this.paszamine.appendChild(this.h1_div);
+        this.paszamine.appendChild(this.span);
+        this.h1_div.appendChild(this.h1);
+    }
     this.ekle_icon = CrateElement("span","add_circle","","material-symbols-rounded");
     this.ekle_icon.style.cssText = "top: 2%;position: absolute;font-size: "+AndazeBaraks(15,15)+"px;color: "+colors.c_4+"";
 
@@ -657,7 +737,15 @@ function QrCodEkle() {
     this.button = CrateElement("input","","m_add_button","","button");
     this.button.value = "save";
     this.button.style.cssText = " position: absolute;width: 100%;height: 13vw;background-color: "+colors.c_1+";color: "+colors.c_4+";font-size: 6vw;border: solid .5vw "+colors.c_4+";top: 30vw;";
+
+    this.qr_paszamine = CrateElement("div");
+    this.qr_paszamine.style.cssText = " top: 12%;position: relative;width: 100%;height: 100%;overflow-y: auto;";
+    this.qrcodes = [];
+    qrcods_data.forEach(element => {
+        this.qrcodes.push(new qr(element.name,element.url,element.id));
+    });
     this.Crate();
+    this.qr_paszamine.style.height = (paszamine_s.getBoundingClientRect().height-this.qr_paszamine.getBoundingClientRect().y)+"px";
     this.ekle_icon.style.left = ((paszamine_s.getBoundingClientRect().width/2)-(this.ekle_icon.getBoundingClientRect().width/2))+"px";
 
     this.m_add_paszamine.addEventListener("touchend",(e)=> {
@@ -671,9 +759,9 @@ function QrCodEkle() {
     })
     this.button.addEventListener("click",(e) => {
         e.stopPropagation();
-        console.log(window.location)
-        let url = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data="
-
+        let url = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data="+location.origin+"/index.html?qr="+this.text.value+"";
+        qrcods_data.push({id: ID_ara(qrcods_data),name: this.text.value,url: url});
+        socket.emit("data_save","qrcodes",JSON.stringify(qrcods_data));
     })
 }
 QrCodEkle.prototype.Crate = function() {
@@ -682,6 +770,10 @@ QrCodEkle.prototype.Crate = function() {
     this.m_add_paszamine.appendChild(this.m_add_paszamine_s);
     this.m_add_paszamine_s.appendChild(this.text);
     this.m_add_paszamine_s.appendChild(this.button);
+    this.qrcodes.forEach(e => {
+        this.qr_paszamine.appendChild(e.paszamine);
+    });
+    paszamine_s.appendChild(this.qr_paszamine);
 }
-qrcodes = new QrCodEkle();
 
+export {colors};
