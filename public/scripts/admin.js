@@ -2,8 +2,10 @@
 ////////////////////////
 //     elements       //
 ////////////////////////
+
+
 ////////////////////////
-let meno_ekle,menolar,urun_ekle,urunler;
+let meno_ekle,menolar,urun_ekle,urunler,qrcodes;
 
 
 ////////////////////////
@@ -14,9 +16,10 @@ let meno_ekle,menolar,urun_ekle,urunler;
 let socket = io();
 let menolar_data = [];
 let urunler_data = [];
+let qrcods_data = [];
 
 
-// socket.emit("data_save","menolar",JSON.stringify(meno_ekle));
+// socket.emit("data_load","menolar");
 
 socket.on("data_load",(database,data)=> {
     if (database == "menolar") {
@@ -62,6 +65,32 @@ function CratePaszamine() {
 //    acharfaranse    //
 ////////////////////////
 ////////////////////////
+function araye_element_remove(element,id,method) {
+    let data = [];
+    let sira = 1;
+    if (method == "id") {
+        element.forEach(e => {
+            if (Number(e.id) !== Number(id)) {
+                let e_ = e;
+                e_.id = sira;
+                data.push(e_);
+                sira++
+            }
+        });
+    }
+    if (method == "meno_id") {
+        element.forEach(e => {
+            if (Number(e.meno_id) !== Number(id)) {
+                let e_ = e;
+                e_.id = sira;
+                data.push(e_);
+                sira++
+            }
+        });
+    }
+   
+    return data;
+}
 function SerchId(id,element) {
     let data;
     element.forEach(e => {
@@ -226,18 +255,28 @@ MenoEkle.prototype.Crate = function() {
 }
 function Meno(id_,name_,img_) {
     this.id = id_;
+    this.edit =  this.ekle_icon = CrateElement("span","edit","","material-symbols-rounded");
+    this.edit.style.cssText = " left: 3%;top: 67%;position: absolute;font-size: 8vw;background-color: "+colors.c_2+";color: "+colors.c_4+";border-radius: 10vw;border: solid 1vw "+colors.c_3+";padding: 1vw;";
     this.paszamine = CrateElement("div","","meno_div");
     this.img = CrateElement("img","","meno_img");
     this.img.src = "./images/"+img_;
     this.h1_div = CrateElement("div","","meno_h1_div");
     this.h1 = CrateElement("h1",name_,"meno_h1");
     this.h1.style.color = colors.c_3;
+    this.paszamine.appendChild(this.edit);
     this.paszamine.appendChild(this.img);
     this.paszamine.appendChild(this.h1_div);
     this.h1_div.appendChild(this.h1);
     this.paszamine.addEventListener("click",()=> {
         localStorage.setItem("meno_id",this.id);
         socket.emit("data_load","urunler");
+    })
+    this.edit.addEventListener("click",(e) => {
+        e.stopPropagation();
+        paszamine_s.innerHTML = "";
+        localStorage.setItem("meno_id",this.id);
+        console.log(this.id);
+        meno_ekle = new Menoedit(SerchId(this.id,menolar_data));
     })
 }
 function Menolar() {
@@ -264,12 +303,96 @@ Menolar.prototype.Crate = function() {
     });
 }
 
+function Menoedit (data) {
+    this.imgsrc = data.img;
+    this.m_add_paszamine = CrateElement("div","","m_add_paszamine");
+    this.m_add_paszamine.style.background = "url("+data.img+")";
+    this.m_add_paszamine.style.objectFit = "cover";
+    this.m_add_paszamine.style.cssText = "position: relative;width: 100%;height: 100%;background-color: rgba(255, 255, 255, 0.549);"
+    this.m_add_paszamine_s = CrateElement("form","","m_add_paszamine_s");
+    this.m_add_paszamine_s.style.cssText = "position: relative;float: left;width: 90%;height: auto;background-color: #adebf000;margin-left: 5%;margin-top: 20%;",
+
+    this.delete = CrateElement("input","","delete","","button");
+    this.delete.value = "Delete";
+    ////// urun adi
+    this.text = CrateElement("input","","m_add_text","","text");
+    this.text.value = data.meno_name;
+    this.text.style.cssText = "font-size: 5vw;width: 98%;height: 12vw;border: solid .5vw "+colors.c_4+";padding: .2vw;background-color: "+colors.c_1+";color: "+colors.c_3+";margin-top: 14vw;";
+    this.text.setAttribute("placeholder","Prodoct Name:........");
+    this.text.setAttribute("maxlength","20");
+
+    this.file = CrateElement("input","","add_meno_file","","file");
+    this.lable = CrateElement("lable","","m_add_lable");
+    this.lable.setAttribute("for","add_meno_file");
+    this.lable.style.cssText = " position: absolute;width: 100%;height: 12vw;background-color: "+colors.c_1+";";
+    this.icon = CrateElement("span","add_photo_alternate","m_add_icon","material-symbols-rounded");
+    this.icon.style.cssText = "font-size: 12vw;color: "+colors.c_4+";margin-left: 40%;";
+    this.button = CrateElement("input","","m_add_button","","button");
+    this.button.value = "save";
+    this.button.style.cssText = "width: 100%;height: 13vw;background-color: "+colors.c_1+";color: "+colors.c_4+";font-size: 6vw;border: solid .5vw "+colors.c_4+";margin-top: 1vw;";
+    
+    this.Crate();
+    this.m_add_paszamine_s.style.marginTop = innerHeight/3+"px";
+    this.m_add_paszamine_s.style.height = AndazeBaraks(90,70)-innerHeight/3+"px";
+
+    this.lable.addEventListener("click",(e)=> {
+        this.file.click();
+    })
+    this.delete.addEventListener("click",(e)=> {
+        e.stopPropagation();
+        let id = localStorage.getItem("meno_id");
+        menolar_data = araye_element_remove(menolar_data,id,"id");
+        urunler_data = araye_element_remove(urunler_data,id,"meno_id")
+        socket.emit("data_save","urunler",JSON.stringify(urunler_data));
+        socket.emit("data_save","menolar",JSON.stringify(menolar_data));
+    })
+   
+    this.button.addEventListener("click",(e)=> {
+        e.stopPropagation();
+        if (this.file.files.length > 0) {
+        let data = new FormData();
+        data.append("image",this.file.files[0]);
+        let http = new XMLHttpRequest();
+        http.open("POST","/upload_image",true);
+        http.send(data);
+        }
+        let sira = 0;
+        menolar_data.forEach(e => {
+            
+            if(Number(e.id) == Number(localStorage.getItem("meno_id"))&& this.file.files.length < 1) {
+                menolar_data[sira] = {id: e.id,meno_name: this.text.value,img: this.imgsrc}
+
+                console.log(e);
+            }
+            if(Number(e.id) == Number(localStorage.getItem("meno_id"))&& this.file.files.length > 0) {
+                menolar_data[sira]  = {id: e.id,meno_name: this.text.value,img: this.file.files[0].name};
+            }
+            sira++;
+        });
+        socket.emit("data_save","menolar",JSON.stringify(menolar_data));
+        this.m_add_paszamine.style.display = "none";
+        
+    })
+}
+Menoedit.prototype.Crate = function() {
+    paszamine_s.appendChild(this.m_add_paszamine);
+    this.m_add_paszamine.appendChild(this.m_add_paszamine_s);
+    this.m_add_paszamine_s.appendChild(this.delete);
+    this.m_add_paszamine_s.appendChild(this.file);
+    this.m_add_paszamine_s.appendChild(this.lable);
+    this.m_add_paszamine_s.appendChild(this.text);
+    this.m_add_paszamine_s.appendChild(this.button);
+    this.lable.appendChild(this.icon);
+}
+
 ///////////////////////
 ////////////////////////
 //      urunler       //
 ////////////////////////
 ////////////////////////
 function UrunEkle () {
+    this.bak_icon = CrateElement("span","arrow_back_ios","","material-symbols-rounded");
+    this.bak_icon.style.cssText = "top: 2%;position: absolute;font-size: "+AndazeBaraks(15,15)+"px;color: "+colors.c_4+"";
     this.ekle_icon = CrateElement("span","add_circle","","material-symbols-rounded");
     this.ekle_icon.style.cssText = "top: 2%;position: absolute;font-size: "+AndazeBaraks(15,15)+"px;color: "+colors.c_4+"";
     this.m_add_paszamine = CrateElement("div","","m_add_paszamine");
@@ -301,10 +424,16 @@ function UrunEkle () {
     this.button.style.cssText = "width: 100%;height: 13vw;background-color: "+colors.c_1+";color: "+colors.c_4+";font-size: 6vw;border: solid .5vw "+colors.c_4+";margin-top: 1vw;";
     
     this.Crate();
-    this.ekle_icon.style.left = ((paszamine_s.getBoundingClientRect().width/2)-(this.ekle_icon.getBoundingClientRect().width/2))+"px"
+    this.bak_icon.style.left = paszamine_s.getBoundingClientRect().width/10+"px"
+    this.ekle_icon.style.left = ((paszamine_s.getBoundingClientRect().width/1.2)-(this.ekle_icon.getBoundingClientRect().width/2))+"px"
     this.m_add_paszamine_s.style.marginTop = this.ekle_icon.getBoundingClientRect().height*2+"px";
     this.m_add_paszamine_s.style.height = AndazeBaraks(90,70)-this.ekle_icon.getBoundingClientRect().height*2+"px";
 
+    this.bak_icon.addEventListener("click",(e) => {
+        e.stopPropagation();
+        socket.emit("data_load","menolar");
+
+    })
     this.lable.addEventListener("click",(e)=> {
         this.file.click();
     })
@@ -333,6 +462,7 @@ function UrunEkle () {
 }
 
 UrunEkle.prototype.Crate = function() {
+    paszamine_s.appendChild(this.bak_icon);
     paszamine_s.appendChild(this.ekle_icon);
     paszamine_s.appendChild(this.m_add_paszamine);
     this.m_add_paszamine.appendChild(this.m_add_paszamine_s);
@@ -395,10 +525,10 @@ function Urunler() {
     this.Crate();
     this.meno.forEach(e => {
     
-        e.h1_div.style.top = ((e.paszamine.getBoundingClientRect().height/10))+"px";
+        e.h1_div.style.top = ((e.h1_div.getBoundingClientRect().height/2))+"px";
         e.h1_div_aciklama.style.top = (((e.h1_div.getBoundingClientRect().y+e.h1_div.getBoundingClientRect().height)-e.paszamine.getBoundingClientRect().y)+20)+"px";
         e.h1_div_fiyat.style.top = (((e.h1_div_aciklama.getBoundingClientRect().y+e.h1_div_aciklama.getBoundingClientRect().height)-e.paszamine.getBoundingClientRect().y)+20)+"px";
-        e.paszamine.style.height = (((e.h1_div_fiyat.getBoundingClientRect().y+e.h1_div_fiyat.getBoundingClientRect().height)-e.paszamine.getBoundingClientRect().y)+20)+"px";
+        e.paszamine.style.height = (((e.h1_div_fiyat.getBoundingClientRect().y+e.h1_div_fiyat.getBoundingClientRect().height)-e.paszamine.getBoundingClientRect().y)+(e.h1_div.getBoundingClientRect().height/2))+"px";
         
     });
     this.paszamine.style.cssText = " width: 100%;margin-top: "+(urun_ekle.ekle_icon.getBoundingClientRect().y+urun_ekle.ekle_icon.getBoundingClientRect().height)*1.3+"px;overflow-y: scroll;"
@@ -461,16 +591,7 @@ function Urunedit (data) {
     this.delete.addEventListener("click",(e)=> {
         e.stopPropagation();
         let id = localStorage.getItem("urun_id");
-        let sira = 0;
-        urunler_data.forEach(e => {
-            if(e.id == id) {
-                urunler_data.splice(sira,1);
-                for (let index = 0; index < urunler_data.length; index++) {
-                    urunler_data[index].id = index
-                }
-                
-            }
-        });
+        urunler_data = araye_element_remove(urunler_data,id,"id");
         socket.emit("data_save","urunler",JSON.stringify(urunler_data));
     })
    
@@ -502,7 +623,6 @@ function Urunedit (data) {
         
     })
 }
-
 Urunedit.prototype.Crate = function() {
     paszamine_s.appendChild(this.m_add_paszamine);
     this.m_add_paszamine.appendChild(this.m_add_paszamine_s);
@@ -515,3 +635,53 @@ Urunedit.prototype.Crate = function() {
     this.m_add_paszamine_s.appendChild(this.button);
     this.lable.appendChild(this.icon);
 }
+
+///////////////////////
+////////////////////////
+//      qrcodes       //
+////////////////////////
+////////////////////////
+function QrCodEkle() {
+    this.ekle_icon = CrateElement("span","add_circle","","material-symbols-rounded");
+    this.ekle_icon.style.cssText = "top: 2%;position: absolute;font-size: "+AndazeBaraks(15,15)+"px;color: "+colors.c_4+"";
+
+    this.m_add_paszamine = CrateElement("div","","m_add_paszamine");
+    this.m_add_paszamine.style.cssText = "display: none;position: relative;width: 100%;height: 100%;background-color: rgba(255, 255, 255, 0.549);"
+    this.m_add_paszamine_s = CrateElement("form","","m_add_paszamine_s");
+    this.m_add_paszamine_s.style.cssText = "position: relative;float: left;width: 90%;height: 40vw;background-color: #adebf000;margin-left: 5%;margin-top: 20%;",
+    this.text = CrateElement("input","","m_add_text","","text");
+    this.text.style.cssText = " position: absolute;font-size: 5vw;width: 98%;height: 12vw;border: solid .5vw "+colors.c_4+";padding: .2vw;background-color: "+colors.c_1+";color: "+colors.c_3+";top: 14vw;";
+    this.text.setAttribute("placeholder","name-no:........");
+    this.text.setAttribute("maxlength","20");
+
+    this.button = CrateElement("input","","m_add_button","","button");
+    this.button.value = "save";
+    this.button.style.cssText = " position: absolute;width: 100%;height: 13vw;background-color: "+colors.c_1+";color: "+colors.c_4+";font-size: 6vw;border: solid .5vw "+colors.c_4+";top: 30vw;";
+    this.Crate();
+    this.ekle_icon.style.left = ((paszamine_s.getBoundingClientRect().width/2)-(this.ekle_icon.getBoundingClientRect().width/2))+"px";
+
+    this.m_add_paszamine.addEventListener("touchend",(e)=> {
+        if (e.changedTouches[0].pageY < this.m_add_paszamine_s.getBoundingClientRect().y || e.changedTouches[0].pageY > this.m_add_paszamine_s.getBoundingClientRect().y+this.m_add_paszamine_s.getBoundingClientRect().height*1.5) {
+            this.m_add_paszamine.style.display = "none";
+        }
+    })
+    this.ekle_icon.addEventListener("click",(e)=> {
+        e.stopPropagation();
+        this.m_add_paszamine.style.display = "flex";
+    })
+    this.button.addEventListener("click",(e) => {
+        e.stopPropagation();
+        console.log(window.location)
+        let url = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data="
+
+    })
+}
+QrCodEkle.prototype.Crate = function() {
+    paszamine_s.appendChild(this.ekle_icon);
+    paszamine_s.appendChild(this.m_add_paszamine);
+    this.m_add_paszamine.appendChild(this.m_add_paszamine_s);
+    this.m_add_paszamine_s.appendChild(this.text);
+    this.m_add_paszamine_s.appendChild(this.button);
+}
+qrcodes = new QrCodEkle();
+

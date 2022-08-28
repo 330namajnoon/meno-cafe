@@ -79,4 +79,15 @@ hr {
     border: solid 0 ;
     
 }
+#meno_edit {
+    left: 3%;
+    top: 67%;
+    position: absolute;
+    font-size: 8vw;
+    background-color: aliceblue;
+    color: #ADEBF0;
+    border-radius: 10vw;
+    border: solid 1vw black;
+    padding: 1vw;
+}
 

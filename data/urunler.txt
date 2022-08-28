@@ -1,1 +1,1 @@
-[{"id":0,"meno_name":"ssf","img":"vi_export_2nhga9bop_16609431644474192.png","aciklama":"dfbfb","fiyat":"10","meno_id":"2"}]
+[]
