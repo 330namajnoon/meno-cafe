@@ -18,10 +18,10 @@ let urunler_data = [];
 let qrcods_data = [];
 
 
-socket.emit("data_load",""+user.imail+user.lisens+"qrcodes");
-
+// socket.emit("data_save",""+user.imail+user.lisens+"qrcodes","salam");
+// console.log(user.imail+user.lisens);
 socket.on("data_load",(database,data)=> {
-    if (database == "menolar") {
+    if (database == ""+user.imail+user.lisens+"menolar") {
         if(data != "") {
             menolar_data = JSON.parse(data);
         }
@@ -30,7 +30,7 @@ socket.on("data_load",(database,data)=> {
         meno_ekle = new MenoEkle();
         menolar = new Menolar();
     }
-    if (database == "urunler") {
+    if (database == ""+user.imail+user.lisens+"urunler") {
         if(data != "") {
             urunler_data = JSON.parse(data);
         }
@@ -39,7 +39,7 @@ socket.on("data_load",(database,data)=> {
         urun_ekle = new UrunEkle();
         urunler = new Urunler();
     }
-    if (database == "qrcodes") {
+    if (database == ""+user.imail+user.lisens+"qrcodes") {
         if(data != "") {
             qrcods_data = JSON.parse(data);
         }
@@ -162,10 +162,10 @@ function NavarAbzar() {
     this.kasa = Abzar("currency_exchange");
     this.qrcodes = Abzar("qr_code_2");
     this.meno_add.addEventListener("click",()=> {
-        socket.emit("data_load","menolar");
+        socket.emit("data_load",""+user.imail+user.lisens+"menolar");
     })
     this.qrcodes.addEventListener("click",()=> {
-        socket.emit("data_load","qrcodes");
+        socket.emit("data_load",""+user.imail+user.lisens+"qrcodes");
     })
     this.Crate();
 }
@@ -250,7 +250,7 @@ function MenoEkle () {
         e.stopPropagation();
         if (this.file.files.length > 0 && this.text.value !== "") {
             menolar_data.push({id: ID_ara(menolar_data),meno_name: this.text.value,img: this.file.files[0].name});
-            socket.emit("data_save","menolar",JSON.stringify(menolar_data));
+            socket.emit("data_save",""+user.imail+user.lisens+"menolar",JSON.stringify(menolar_data));
             this.m_add_paszamine.style.display = "none";
         }
        
@@ -283,7 +283,7 @@ function Meno(id_,name_,img_) {
     this.h1_div.appendChild(this.h1);
     this.paszamine.addEventListener("click",()=> {
         localStorage.setItem("meno_id",this.id);
-        socket.emit("data_load","urunler");
+        socket.emit("data_load",""+user.imail+user.lisens+"urunler");
     })
     this.edit.addEventListener("click",(e) => {
         e.stopPropagation();
@@ -359,8 +359,8 @@ function Menoedit (data) {
         let id = localStorage.getItem("meno_id");
         menolar_data = araye_element_remove(menolar_data,id,"id");
         urunler_data = araye_element_remove(urunler_data,id,"meno_id")
-        socket.emit("data_save","urunler",JSON.stringify(urunler_data));
-        socket.emit("data_save","menolar",JSON.stringify(menolar_data));
+        socket.emit("data_save",""+user.imail+user.lisens+"urunler",JSON.stringify(urunler_data));
+        socket.emit("data_save",""+user.imail+user.lisens+"menolar",JSON.stringify(menolar_data));
     })
     this.file.addEventListener("change",()=>{
         let data = new FormData();
@@ -393,7 +393,7 @@ function Menoedit (data) {
             }
             sira++;
         });
-        socket.emit("data_save","menolar",JSON.stringify(menolar_data));
+        socket.emit("data_save",""+user.imail+user.lisens+"menolar",JSON.stringify(menolar_data));
         this.m_add_paszamine.style.display = "none";
         
     })
@@ -458,7 +458,7 @@ function UrunEkle () {
 
     this.bak_icon.addEventListener("click",(e) => {
         e.stopPropagation();
-        socket.emit("data_load","menolar");
+        socket.emit("data_load",""+user.imail+user.lisens+"menolar");
 
     })
     this.lable.addEventListener("click",(e)=> {
@@ -492,7 +492,7 @@ function UrunEkle () {
         if(this.file.files.length > 0 && this.text.value !== "" && this.text_aciklama.value !== "",this.text_fiyat.value !== "") {
         urunler_data.push({id: ID_ara(urunler_data),meno_name: this.text.value,img: this.file.files[0].name,aciklama: this.text_aciklama.value,fiyat: this.text_fiyat.value,meno_id: localStorage.getItem("meno_id")});
         console.log(urunler_data);
-        socket.emit("data_save","urunler",JSON.stringify(urunler_data));
+        socket.emit("data_save",""+user.imail+user.lisens+"urunler",JSON.stringify(urunler_data));
         this.m_add_paszamine.style.display = "none";
         }
         
@@ -633,7 +633,7 @@ function Urunedit (data) {
         e.stopPropagation();
         let id = localStorage.getItem("urun_id");
         urunler_data = araye_element_remove(urunler_data,id,"id");
-        socket.emit("data_save","urunler",JSON.stringify(urunler_data));
+        socket.emit("data_save",""+user.imail+user.lisens+"urunler",JSON.stringify(urunler_data));
     })
 
     this.file.addEventListener("change",()=> {
@@ -665,7 +665,7 @@ function Urunedit (data) {
             sira++;
         });
         console.log(urunler_data);
-        socket.emit("data_save","urunler",JSON.stringify(urunler_data));
+        socket.emit("data_save",""+user.imail+user.lisens+"urunler",JSON.stringify(urunler_data));
         this.m_add_paszamine.style.display = "none";
         
     })
@@ -712,7 +712,7 @@ function QrCodEkle() {
         this.span.addEventListener("click",(e)=> {
             e.stopPropagation();
             qrcods_data = araye_element_remove(qrcods_data,this.id,"id");
-            socket.emit("data_save","qrcodes",JSON.stringify(qrcods_data));
+            socket.emit("data_save",""+user.imail+user.lisens+"qrcodes",JSON.stringify(qrcods_data));
         })
         this.Crate();
     }
@@ -761,7 +761,7 @@ function QrCodEkle() {
         e.stopPropagation();
         let url = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data="+location.origin+"/index.html?qr="+this.text.value+"";
         qrcods_data.push({id: ID_ara(qrcods_data),name: this.text.value,url: url});
-        socket.emit("data_save","qrcodes",JSON.stringify(qrcods_data));
+        socket.emit("data_save",""+user.imail+user.lisens+"qrcodes",JSON.stringify(qrcods_data));
     })
 }
 QrCodEkle.prototype.Crate = function() {

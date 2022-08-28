@@ -80,6 +80,10 @@ function userSave(data) {
         console.log(users_data);
         socket.emit("data_save","admin_users",JSON.stringify(users_data));
         localStorage.setItem("user",JSON.stringify(user));
+        let admin_ad = [];
+        socket.emit("admin_ad",data.imail+data.lisens+"menolar",JSON.stringify(admin_ad));
+        socket.emit("admin_ad",data.imail+data.lisens+"urunler",JSON.stringify(admin_ad));
+        socket.emit("admin_ad",data.imail+data.lisens+"qrcodes",JSON.stringify(admin_ad));
         open(location.href);
     }else {
         sigin.eror.style.display = "grid";

@@ -70,6 +70,15 @@ io.on('connection', (client) => {
 
     })
 
+    client.on("admin_ad", (database,data) => {
+        fs.writeFile("./data/"+database+".txt", data, function (err) {
+            if (err) throw err;
+            console.log('Saved!');
+            let fs = require('fs');
+        });
+
+    })
+
 
 
 
