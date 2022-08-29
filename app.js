@@ -52,6 +52,20 @@ io.on('connection', (client) => {
         })
         
     })
+    client.on("data_save_s",(database,data) => {
+        fs.writeFile("./data/"+database+".txt", data, function (err) {
+            if (err) throw err;
+            console.log('Saved!');
+            let fs = require('fs');
+
+            fs.readFile("./data/"+database+".txt", function (err, data) {
+
+                client.emit("data_load_s",database,data.toString());
+                
+
+            })
+        });
+    })
     client.on("data_save", (database,data) => {
         
 
