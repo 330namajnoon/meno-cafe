@@ -11,9 +11,7 @@ body {
     overflow-y: auto;
 }
 #test {
-  position: absolute;font-size: 10vw;color: red;top: 0;left: 0;
-  float: left;
-  display: grid;
+  position: absolute;width: 100%;height: 100%;overflow-y: auto;
 }
 #test1 {
     width: 100%;

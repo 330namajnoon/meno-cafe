@@ -1,5 +1,5 @@
 let socket = io();
-import {colors} from "./admin.js";
+import {colors,ID_ara} from "./acharfaranse.js";
 let user;
 let lisens;
 let users_data = []
@@ -40,6 +40,14 @@ function Sigin() {
     this.imail.style.cssText = "border-radius: 3vw;margin-top: 5vw;width: 100%;height: 10vw;background-color: "+colors.c_4+"; border: solid .5vw "+colors.c_3+"; color: "+colors.c_1+";font-size: 8vw;";
     this.imail.type = "text";
     this.imail.setAttribute("placeholder","imail ...");
+    this.sifre = document.createElement("input");
+    this.sifre.style.cssText = "border-radius: 3vw;margin-top: 5vw;width: 100%;height: 10vw;background-color: "+colors.c_4+"; border: solid .5vw "+colors.c_3+"; color: "+colors.c_1+";font-size: 8vw;";
+    this.sifre.type = "password";
+    this.sifre.setAttribute("placeholder","password ...");
+    this.sifre_s = document.createElement("input");
+    this.sifre_s.style.cssText = "border-radius: 3vw;margin-top: 5vw;width: 100%;height: 10vw;background-color: "+colors.c_4+"; border: solid .5vw "+colors.c_3+"; color: "+colors.c_1+";font-size: 8vw;";
+    this.sifre_s.type = "password";
+    this.sifre_s.setAttribute("placeholder","repeat the password ...");
     this.lisens = document.createElement("input");
     this.lisens.style.cssText = "border-radius: 3vw;margin-top: 5vw;width: 100%;height: 10vw;background-color: "+colors.c_4+"; border: solid .5vw "+colors.c_3+"; color: "+colors.c_1+";font-size: 8vw;";
     this.lisens.type = "text";
@@ -51,8 +59,8 @@ function Sigin() {
     this.Crate();
     this.save.addEventListener("click",(e)=> {
         e.stopPropagation();
-        if (this.name != "" && this.lastname != "" && this.imail != "" && this.lisens != ""  ) {
-            user = {name: this.name.value,lastname: this.lastname.value,imail: this.imail.value,lisens: this.lisens.value};
+        if (this.name.value != "" && this.lastname.value != "" && this.imail.value != "" && this.lisens.value != "" &&this.sifre.value != ""&& this.sifre_s.value != "" && this.sifre.value == this.sifre_s.value) {
+            user = {id: ID_ara(users_data),name: this.name.value,lastname: this.lastname.value,imail: this.imail.value,password: this.sifre.value,lisens: this.lisens.value};
             socket.emit("data_load","lisens");
             socket.on("data_load",(database,data)=> {
                 lisens = JSON.parse(data);
@@ -70,6 +78,8 @@ Sigin.prototype.Crate = function() {
     this.paszamine_s.appendChild(this.name);
     this.paszamine_s.appendChild(this.lastname);
     this.paszamine_s.appendChild(this.imail);
+    this.paszamine_s.appendChild(this.sifre);
+    this.paszamine_s.appendChild(this.sifre_s);
     this.paszamine_s.appendChild(this.lisens);
     this.paszamine_s.appendChild(this.save);
 }
@@ -84,6 +94,9 @@ function userSave(data) {
         socket.emit("admin_ad",data.imail+data.lisens+"menolar",JSON.stringify(admin_ad));
         socket.emit("admin_ad",data.imail+data.lisens+"urunler",JSON.stringify(admin_ad));
         socket.emit("admin_ad",data.imail+data.lisens+"qrcodes",JSON.stringify(admin_ad));
+        socket.emit("admin_ad",data.imail+data.lisens+"siparisler",JSON.stringify(admin_ad));
+        socket.emit("admin_ad",data.imail+data.lisens+"kasa",JSON.stringify(admin_ad));
+        socket.emit("admin_ad",data.imail+data.lisens+"users",JSON.stringify(admin_ad));
         open(location.href);
     }else {
         sigin.eror.style.display = "grid";

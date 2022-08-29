@@ -1,1 +1,1 @@
-[{"id":1,"name":"12","url":"https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=http://localhost:4000/index.html?qr=12"}]
+[{"id":1,"name":"masa2","url":"https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=http://localhost:4000/index.html?masa=masa2?admin=sina.blender1@gmail.com"}]
