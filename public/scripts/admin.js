@@ -720,13 +720,174 @@ QrCodEkle.prototype.Crate = function() {
 ////////////////////////
 
 function Siparisler() {
-    this.paszamine = CrateElement("div");
-    this.paszamine.style.cssText = "position: absolute;width: 100%;height: 100%;overflow-y: auto;";
+    function Siparis(id,urun_adi,aciklama,fiyat,adet,masa_no,tarih) {
+        this.id = id;
+        this.urun_adi = urun_adi;
+        this.aciklama = aciklama;
+        this.fiyat = fiyat;
+        this.adet = adet ;
+        this.masa_no = masa_no;
+        this.tarih = tarih;
+        this.paszamine = CrateElement("div");
+        this.paszamine.style.cssText = "float: left;margin-top: 4vw;text-align: center;width: 90%;height: auto;margin-left:5%";
+        /////  tarih sira
+        this.sira_div1 = CrateElement("div");
+        this.sira_div1.style.cssText = "border-radius: 4vw 0vw 0 0;float: left;width: 28%;height: 10vw;border: solid .5vw "+colors.c_1+";background-color: "+colors.c_4+";";
+        this.sira_h11 = CrateElement("h1");
+        this.sira_h11.innerHTML = "tarih :";
+        this.sira_h11.style.cssText = "margin-top: 2.5vw;font-size: 4vw;color: "+colors.c_1+";";
+        //satir
+        this.satir_div1 = CrateElement("div");
+        this.satir_div1.style.cssText = "border-radius: 0vw 4vw 0 0;float: left;width: 69%;height: 10vw;border: solid .5vw "+colors.c_1+";background-color: "+colors.c_4+";";
+        this.satir_h11 = CrateElement("h1");
+        this.satir_h11.innerHTML = this.tarih;
+        this.satir_h11.style.cssText = "margin-top: 2.5vw;font-size: 5vw;color: "+colors.c_1+";";
+         /////  urun adi sira
+         this.sira_div2 = CrateElement("div");
+         this.sira_div2.style.cssText = "float: left;width: 28%;height: 10vw;border: solid .5vw "+colors.c_1+";background-color: "+colors.c_4+";";
+         this.sira_h12 = CrateElement("h1");
+         this.sira_h12.innerHTML = "siparis :";
+         this.sira_h12.style.cssText = "margin-top: 2.5vw;font-size: 4vw;color: "+colors.c_1+";";
+         //satir
+         this.satir_div2 = CrateElement("div");
+         this.satir_div2.style.cssText = "float: left;width: 69%;height: 10vw;border: solid .5vw "+colors.c_1+";background-color: "+colors.c_4+";";
+         this.satir_h12 = CrateElement("h1");
+         this.satir_h12.innerHTML = this.urun_adi;
+         this.satir_h12.style.cssText = "margin-top: 2.5vw;font-size: 5vw;color: "+colors.c_1+";";
+         /////  aciklama sira
+         this.sira_div3 = CrateElement("div");
+         this.sira_div3.style.cssText = "float: left;width: 28%;height: 10vw;border: solid .5vw "+colors.c_1+";background-color: "+colors.c_4+";";
+         this.sira_h13 = CrateElement("h1");
+         this.sira_h13.innerHTML = "aciklama :";
+         this.sira_h13.style.cssText = "margin-top: 2.5vw;font-size: 4vw;color: "+colors.c_1+";";
+         //satir
+         this.satir_div3 = CrateElement("div");
+         this.satir_div3.style.cssText = "overflow-y: auto;float: left;width: 69%;height: 10vw;border: solid .5vw "+colors.c_1+";background-color: "+colors.c_4+";";
+         this.satir_h13 = CrateElement("h1");
+         this.satir_h13.innerHTML = this.aciklama;
+         this.satir_h13.style.cssText = "margin-top: 2.5vw;font-size: 5vw;color: "+colors.c_1+";";
+          /////  fiyat sira
+          this.sira_div4 = CrateElement("div");
+          this.sira_div4.style.cssText = "float: left;width: 28%;height: 10vw;border: solid .5vw "+colors.c_1+";background-color: "+colors.c_4+";";
+          this.sira_h14 = CrateElement("h1");
+          this.sira_h14.innerHTML = "fiyat :";
+          this.sira_h14.style.cssText = "margin-top: 2.5vw;font-size: 4vw;color: "+colors.c_1+";";
+          //satir
+          this.satir_div4 = CrateElement("div");
+          this.satir_div4.style.cssText = "overflow-y: auto;float: left;width: 69%;height: 10vw;border: solid .5vw "+colors.c_1+";background-color: "+colors.c_4+";";
+          this.satir_h14 = CrateElement("h1");
+          this.satir_h14.innerHTML = this.fiyat+" $";
+          this.satir_h14.style.cssText = "margin-top: 2.5vw;font-size: 5vw;color: "+colors.c_1+";";
+           /////  adet sira
+           this.sira_div5 = CrateElement("div");
+           this.sira_div5.style.cssText = "float: left;width: 28%;height: 10vw;border: solid .5vw "+colors.c_1+";background-color: "+colors.c_4+";";
+           this.sira_h15 = CrateElement("h1");
+           this.sira_h15.innerHTML = "adet :";
+           this.sira_h15.style.cssText = "margin-top: 2.5vw;font-size: 4vw;color: "+colors.c_1+";";
+           //satir
+           this.satir_div5 = CrateElement("div");
+           this.satir_div5.style.cssText = "overflow-y: auto;float: left;width: 69%;height: 10vw;border: solid .5vw "+colors.c_1+";background-color: "+colors.c_4+";";
+           this.satir_h15 = CrateElement("h1");
+           this.satir_h15.innerHTML = this.adet;
+           this.satir_h15.style.cssText = "margin-top: 2.5vw;font-size: 5vw;color: "+colors.c_1+";";
+            /////  toplam fiyati sira
+            this.sira_div6 = CrateElement("div");
+            this.sira_div6.style.cssText = "float: left;width: 28%;height: 10vw;border: solid .5vw "+colors.c_1+";background-color: "+colors.c_4+";";
+            this.sira_h16 = CrateElement("h1");
+            this.sira_h16.innerHTML = "toplam :";
+            this.sira_h16.style.cssText = "margin-top: 2.5vw;font-size: 4vw;color: "+colors.c_1+";";
+            //satir
+            this.satir_div6 = CrateElement("div");
+            this.satir_div6.style.cssText = "overflow-y: auto;float: left;width: 69%;height: 10vw;border: solid .5vw "+colors.c_1+";background-color: "+colors.c_4+";";
+            this.satir_h16 = CrateElement("h1");
+            this.satir_h16.innerHTML = Number(this.adet)*Number(this.fiyat)+" $";
+            this.satir_h16.style.cssText = "margin-top: 2.5vw;font-size: 5vw;color: "+colors.c_1+";";
+             /////  masa_no sira
+             this.sira_div7 = CrateElement("div");
+             this.sira_div7.style.cssText = "float: left;width: 28%;height: 10vw;border: solid .5vw "+colors.c_1+";background-color: "+colors.c_4+";";
+             this.sira_h17 = CrateElement("h1");
+             this.sira_h17.innerHTML = "masa no :";
+             this.sira_h17.style.cssText = "margin-top: 2.5vw;font-size: 4vw;color: "+colors.c_1+";";
+             //satir
+             this.satir_div7 = CrateElement("div");
+             this.satir_div7.style.cssText = "overflow-y: auto;float: left;width: 69%;height: 10vw;border: solid .5vw "+colors.c_1+";background-color: "+colors.c_4+";";
+             this.satir_h17 = CrateElement("h1");
+             this.satir_h17.innerHTML = this.masa_no;
+             this.satir_h17.style.cssText = "margin-top: 2.5vw;font-size: 5vw;color: "+colors.c_1+";";
 
+             // buttons
+             this.sil = CrateElement("input","","","","button");
+             this.sil.value = "sil";
+             this.sil.style.cssText = "font-size: 5vw;border-radius: 0vw 0vw 0 4vw;float: left;width: 30%;height: 10vw;border: solid 0vw "+colors.c_1+";background-color: "+colors.c_1+";color: "+colors.c_4+"";
+
+             this.onayla = CrateElement("input","","","","button");
+             this.onayla.value = "onayla";
+             this.onayla.style.cssText = "font-size: 5vw;border-radius: 0vw 0vw 4vw 0vw;float: left;width: 70%;height: 10vw;border: solid .5vw "+colors.c_1+";background-color: "+colors.c_4+";color: "+colors.c_1+"";
+        this.Crate();
+
+        this.sil.addEventListener("click",(e) => {
+            e.stopPropagation();
+            siparisler_data = araye_element_remove(siparisler_data,this.id,"id");
+            socket.emit("data_save",""+user.imail+user.lisens+"siparisler",JSON.stringify(siparisler_data));
+        })
+
+    }
+    Siparis.prototype.Crate = function() {
+        this.paszamine.appendChild(this.sira_div1);
+        this.sira_div1.appendChild(this.sira_h11);
+        this.paszamine.appendChild(this.satir_div1);
+        this.satir_div1.appendChild(this.satir_h11);
+
+        this.paszamine.appendChild(this.sira_div2);
+        this.sira_div2.appendChild(this.sira_h12);
+        this.paszamine.appendChild(this.satir_div2);
+        this.satir_div2.appendChild(this.satir_h12);
+
+        this.paszamine.appendChild(this.sira_div3);
+        this.sira_div3.appendChild(this.sira_h13);
+        this.paszamine.appendChild(this.satir_div3);
+        this.satir_div3.appendChild(this.satir_h13);
+
+        this.paszamine.appendChild(this.sira_div4);
+        this.sira_div4.appendChild(this.sira_h14);
+        this.paszamine.appendChild(this.satir_div4);
+        this.satir_div4.appendChild(this.satir_h14);
+
+        this.paszamine.appendChild(this.sira_div5);
+        this.sira_div5.appendChild(this.sira_h15);
+        this.paszamine.appendChild(this.satir_div5);
+        this.satir_div5.appendChild(this.satir_h15);
+
+        this.paszamine.appendChild(this.sira_div6);
+        this.sira_div6.appendChild(this.sira_h16);
+        this.paszamine.appendChild(this.satir_div6);
+        this.satir_div6.appendChild(this.satir_h16);
+
+        this.paszamine.appendChild(this.sira_div7);
+        this.sira_div7.appendChild(this.sira_h17);
+        this.paszamine.appendChild(this.satir_div7);
+        this.satir_div7.appendChild(this.satir_h17);
+
+        this.paszamine.appendChild(this.sil);
+        this.paszamine.appendChild(this.onayla);
+
+    }
+    this.paszamine = CrateElement("div");
+    this.paszamine.style.cssText = "position: absolute;width: 100%;height: 100%;overflow-y: auto;top: 0%";
+    this.siparis = [];
+    siparisler_data.forEach(e => {
+        this.siparis.push(new Siparis(e.id,e.urun_adi,e.aciklama,e.fiyat,e.adet,e.masa_no,e.tarih));
+    });
+    this.Crate();
 }
 Siparisler.prototype.Crate = function() {
     paszamine_s.appendChild(this.paszamine);
+    this.siparis.forEach(e => {
+        this.paszamine.appendChild(e.paszamine);
+    });
+    console.log(this.siparis)
 }
+
 
 
 

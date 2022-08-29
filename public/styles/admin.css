@@ -11,7 +11,7 @@ body {
     overflow-y: auto;
 }
 #test {
-  position: absolute;width: 100%;height: 100%;overflow-y: auto;
+  
 }
 #test1 {
     width: 100%;
@@ -22,7 +22,7 @@ body {
     position: absolute;
     width: 100%;
     height: auto;
-    background-color: aliceblue;
+    background-color: red;
     text-align: center;
 }
 #test3 {
