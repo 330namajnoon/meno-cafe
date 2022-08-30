@@ -11,13 +11,11 @@ body {
     overflow-y: auto;
 }
 #test {
-  width: 90%;height: auto;text-align: center;border: solid .5vw black;background-color: #ADEBF0;border-radius: 5vw;
-  color: #ADEBF0 ;font-size: 20vw;
-  float: left;
-  font-size: 5vw;color: #ADEBF0;float: left;
-  border-radius: 5vw; font-size: 5vw;background-color: #ADEBF0;color: aliceblue;width: 50%;margin-left: 25%;border-radius: 0 0 4vw 4vw;border: solid .5vw gray;
-  margin-bottom: 4vw;
-  position: relative;
+  width: 30%;height: 5vw;background-color: aqua;color: black;border: solid .5vw red;border-radius: 2vw;
+  color: #ADEBF0;font-size: 5vw;margin-left: 3%;margin-top: 3vw;float: left;
+  width: 25%;font-size: 5vw;background-color: aqua;border: solid .5vw red ;float: left;text-align: center;margin-top: 4vw;border-radius: 3vw 3vw 0 0;
+  object-fit: cover;
+  overflow-y: auto;
 }
 #test1 {
     width: 100%;

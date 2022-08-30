@@ -1,6 +1,6 @@
 ///////  imports
 
-import{araye_element_remove,SerchId,ID_ara,colors,CrateElement,AndazeBaraks,filter} from "./acharfaranse.js";
+import{araye_element_remove,SerchId,ID_ara,colors,CrateElement,AndazeBaraks,filter,Tarih_Ara} from "./acharfaranse.js";
 
 ///////////////////////
 ////////////////////////
@@ -31,7 +31,7 @@ socket.on("data_load_s",(database,data) => {
     }
 })
 // socket.emit("data_save",""+user.imail+user.lisens+"users",JSON.stringify(users_data));
-// socket.emit("data_load",""+user.imail+user.lisens+"users")
+socket.emit("data_load",""+user.imail+user.lisens+"siparisler");
 socket.on("data_load",(database,data)=> {
     if (database == ""+user.imail+user.lisens+"menolar") {
         if(data != "") {
@@ -74,6 +74,14 @@ socket.on("data_load",(database,data)=> {
         console.log(users_data);
         paszamine_s.innerHTML = "";
         users = new Users();
+    }
+    if (database == ""+user.imail+user.lisens+"kasa") {
+        if(data != "") {
+            kasa_data = JSON.parse(data);
+        }
+        console.log(kasa_data);
+        paszamine_s.innerHTML = "";
+        kasa = new Kasa();
     }
 })
 
@@ -127,6 +135,10 @@ function NavarAbzar() {
     })
     this.users.addEventListener("click",()=> {
         socket.emit("data_load",""+user.imail+user.lisens+"users");
+    })
+    this.kasa.addEventListener("click",(e) => {
+        e.stopPropagation();
+        socket.emit("data_load",""+user.imail+user.lisens+"kasa");
     })
     this.Crate();
 }
@@ -989,6 +1001,136 @@ Users.prototype.Crate = function() {
     })
 }
 
+///////////////////////
+////////////////////////
+//        users       //
+////////////////////////
+////////////////////////
+function kasa_(data) {
+    this.styles = {
+        s2: "object-fit: cover;height: 4vw;width: 23.7%;font-size: 3vw;background-color: "+colors.c_4+";border: solid .5vw "+colors.c_1+" ;float: left;text-align: center;margin-top: 0vw;color: "+colors.c_1+" "
+    }
+    this.data = data;
+    this.paszamine = CrateElement("div");
+    this.tarih_s = CrateElement("div",""+this.data.tarih+"");
+    this.tarih_s.style.cssText = this.styles.s2;
+    this.siparis_s = CrateElement("div",""+this.data.urun_adi+"");
+    this.siparis_s.style.cssText = this.styles.s2+";overflow-y: auto;";
+    this.adet_s = CrateElement("div",""+this.data.adet+"");
+    this.adet_s.style.cssText = this.styles.s2;
+    this.tutar_s = CrateElement("div",""+Number(this.data.adet)*Number(this.data.fiyat)+" $");
+    this.tutar_s.style.cssText = this.styles.s2;
+    this.Crate();
+}
+kasa_.prototype.Crate = function() {
+    this.paszamine.appendChild(this.tarih_s);
+    this.paszamine.appendChild(this.siparis_s);
+    this.paszamine.appendChild(this.adet_s);
+    this.paszamine.appendChild(this.tutar_s);
+}
+function Kasa() {
+    
+    this.styles = {
+        s1: "float: left;margin-top:5vw;margin-left: 5%;width: 35%;height: 5vw;background-color: "+colors.c_3+";color: "+colors.c_1+";border: solid .5vw "+colors.c_1+";border-radius: 2vw;",
+        s2: "width: 23.7%;font-size: 5vw;background-color: "+colors.c_1+";border: solid .5vw "+colors.c_4+" ;float: left;text-align: center;margin-top: 0vw;color: "+colors.c_4+" "
+    }
+    this.tarih_den = CrateElement("input","","","","date");
+    this.tarih_den.style.cssText = this.styles.s1;
+    this.tarih_a = CrateElement("input","","","","date");
+    this.tarih_a.style.cssText = this.styles.s1;
+    this.right_span = CrateElement("span","arrow_right_alt","","material-symbols-rounded");
+    this.right_span.style.cssText = "float: left;color: "+colors.c_1+";font-size: 7vw;margin-left: 4%;margin-top: 5vw;";
+    
+    this.paszamine = CrateElement("div");
+    this.paszamine.style.cssText = "margin-top: 5vw;float: left;overflow-y: auto;width: 100%;height: 97%;text-align: center;";
+    this.tarih_s = CrateElement("div","Tarih");
+    this.tarih_s.style.cssText = this.styles.s2+";border-radius: 3vw 0vw 0 0;";
+    this.siparis_s = CrateElement("div","Siparis");
+    this.siparis_s.style.cssText = this.styles.s2;
+    this.adet_s = CrateElement("div","Adet");
+    this.adet_s.style.cssText = this.styles.s2;
+    this.tutar_s = CrateElement("div","Tutar");
+    this.tutar_s.style.cssText = this.styles.s2+";border-radius: 0vw 3vw 0 0;";
+    this.durum = 0;
+    this.data = [];
+    this.kasa = [];
+    this.date = new Date();
+    this.yil = this.date.getFullYear();
+    this.ay = this.date.getMonth()+1;
+    this.gun = this.date.getDate();
+    this.tarih = ""+this.yil+"-"+this.ay+"-"+this.gun+"";
+    this.data = Tarih_Ara(kasa_data,this.tarih,this.tarih);
+    
+    console.log(this.tarih);
+    this.shomar = this.data.length-1;
+    this.shomar_fiyat = 0;
+    this.data.forEach(e => {
+        this.shomar_fiyat += Number(e.adet)*Number(e.fiyat);
+        console.log(this.kasa)
+        this.kasa.push(new kasa_(this.data[this.shomar]));
+        this.shomar = this.shomar - 1;
+    })
+    this.toplam_fiyati = CrateElement("div",""+this.shomar_fiyat+" $");
+    this.toplam_fiyati.style.cssText = this.styles.s2+";border-radius: 0vw 0vw 3vw 0;margin-left:75%";
+    this.Crate();
+    
+    this.tarih_den.addEventListener("change",(e) => {
+        this.durum++;
+        if (this.durum > 1) {
+           this.CrateBord();
+        }
+    })
+    this.tarih_a.addEventListener("change",(e) => {
+        this.durum++;
+        if (this.durum > 1) {
+            this.CrateBord();
+        }
+    })
+}
+Kasa.prototype.CrateBord = function() {
+    this.paszamine.innerHTML = "";
+    this.kasa = [];
+    this.paszamine.appendChild(this.tarih_s);
+    this.paszamine.appendChild(this.siparis_s);
+    this.paszamine.appendChild(this.adet_s);
+    this.paszamine.appendChild(this.tutar_s);
+
+    this.data = Tarih_Ara(kasa_data,this.tarih_den.value,this.tarih_a.value);
+
+    this.shomar = this.data.length-1;
+    this.shomar_fiyat = 0;
+    this.data.forEach(e => {
+        this.shomar_fiyat += Number(e.adet)*Number(e.fiyat);
+        console.log(this.data)
+        this.kasa.push(new kasa_(this.data[this.shomar]));
+        this.shomar = this.shomar - 1;
+    })
+    this.toplam_fiyati.innerHTML = ""+this.shomar_fiyat+" $";
+    
+
+    this.kasa.forEach(e => {
+        this.paszamine.appendChild(e.paszamine);
+        console.log(this.kasa)
+    })
+    this.paszamine.appendChild(this.toplam_fiyati);
+}
+Kasa.prototype.Crate = function() {
+    paszamine_s.appendChild(this.tarih_den);
+    paszamine_s.appendChild(this.right_span);
+    paszamine_s.appendChild(this.tarih_a);
+    this.paszamine.appendChild(this.tarih_s);
+    this.paszamine.appendChild(this.siparis_s);
+    this.paszamine.appendChild(this.adet_s);
+    this.paszamine.appendChild(this.tutar_s);
+    
+    
+    paszamine_s.appendChild(this.paszamine);
+    this.kasa.forEach(e => {
+        this.paszamine.appendChild(e.paszamine);
+        console.log(this.kasa)
+    })
+    this.paszamine.appendChild(this.toplam_fiyati);
+}
 
 
 export{user};

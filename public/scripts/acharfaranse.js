@@ -73,5 +73,29 @@ function filter(element) {
     return filter1;
 }
 
+function Tarih_Ara(data_,tarih1_,tarih2_) {
+    let data = [];
+    let tarih = [tarih1_,tarih2_];
+    let tarih1 = [];
+    let tarih2;
+    
+    tarih.forEach(e => {
+        let tarih = e.split("-");
+        tarih1.push({yil: Number(tarih[0]),ay: Number(tarih[1]),gun: Number(tarih[2])})
+    });
 
-export{araye_element_remove,SerchId,ID_ara,colors,CrateElement,AndazeBaraks,filter};
+    data_.forEach(e => {
+        let tarih = e.tarih.split("-");
+        tarih2 = {yil: Number(tarih[0]),ay: Number(tarih[1]),gun: Number(tarih[2])};
+        if (tarih2.yil >= tarih1[0].yil && tarih2.ay >= tarih1[0].ay && tarih2.gun >= tarih1[0].gun&&
+        tarih2.yil <= tarih1[1].yil && tarih2.ay <= tarih1[1].ay && tarih2.gun <= tarih1[1].gun) {
+            data.push(e);
+        }
+    })
+
+    return data;
+
+}
+
+
+export{araye_element_remove,SerchId,ID_ara,colors,CrateElement,AndazeBaraks,filter,Tarih_Ara};
