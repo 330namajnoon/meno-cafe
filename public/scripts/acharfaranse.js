@@ -1,3 +1,6 @@
+
+
+
 ////////////////////////
 ////////////////////////
 //    acharfaranse    //
@@ -26,6 +29,7 @@ function SerchId(id,element) {
     });
     return data
 }
+
 function ID_ara(element) {
     let id;
     if(element.length > 0) {
@@ -35,12 +39,7 @@ function ID_ara(element) {
     }
     return id;
 }
-let colors = {
-    c_1: "#906A50",
-    c_2: "#E5B480",
-    c_3: "#4DDDE0",
-    c_4: "#ADEBF0"
-}
+
 function CrateElement(name = "", inerhtml = "", id = "", clas = "", type = "") {
     let element = document.createElement(name);
     if (inerhtml !== "") {
@@ -98,4 +97,4 @@ function Tarih_Ara(data_,tarih1_,tarih2_) {
 }
 
 
-export{araye_element_remove,SerchId,ID_ara,colors,CrateElement,AndazeBaraks,filter,Tarih_Ara};
+export{araye_element_remove,SerchId,ID_ara,CrateElement,AndazeBaraks,filter,Tarih_Ara};

@@ -1,1 +1,1 @@
-[{"id":1,"name":"sina","lastname":"majnoon","imail":"sina.blender1@gmail.com","password":"S4feri2585","lisens":"sina"}]
+[{"id":1,"name":"sina","lastname":"majnoon","imail":"sina.blender1@gmail.com","password":"S4feri2585","lisens":"sina","colors":{"c_1":"#906A50","c_2":"#E5B480","c_3":"#4DDDE0","c_4":"#ADEBF0"}}]

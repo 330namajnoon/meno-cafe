@@ -1,1 +1,1 @@
-[{"id":1,"meno_name":"shirmoz","img":"sogukicecek.webp","aciklama":"kakau - seker - sut","fiyat":"4","meno_id":"1"},{"id":2,"meno_name":"salab","img":"beneficios-del-cafe-arabica-taza-de-cafe-con-granos-de-cafe-cafes-el-criollo-zaragoza.jpg","aciklama":"salab - seker","fiyat":"3","meno_id":"2"}]
+[]

@@ -1,1 +1,1 @@
-[{"id":1,"meno_name":"cafeler","img":"populer-kahveler.jpg"},{"id":2,"meno_name":"pastalar","img":"image.1568126484541.jpg"}]
+[{"id":1,"meno_name":"cafe con leche","img":"populer-kahveler.jpg"}]

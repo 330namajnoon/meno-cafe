@@ -1,6 +1,6 @@
 ///////  imports
 
-import{araye_element_remove,SerchId,ID_ara,colors,CrateElement,AndazeBaraks,filter,Tarih_Ara} from "./acharfaranse.js";
+import{araye_element_remove,SerchId,ID_ara,CrateElement,AndazeBaraks,filter,Tarih_Ara} from "./acharfaranse.js";
 
 ///////////////////////
 ////////////////////////
@@ -8,9 +8,10 @@ import{araye_element_remove,SerchId,ID_ara,colors,CrateElement,AndazeBaraks,filt
 ////////////////////////
 ////////////////////////
 let user = JSON.parse(localStorage.getItem("user"));
-let meno_ekle,menolar,urun_ekle,urunler,qrcodes,siparisler,kasa,users;
 
+let meno_ekle,menolar,urun_ekle,urunler,qrcodes,siparisler,kasa,users,tem;
 
+let colors = {c_1: "#906A50",c_2: "#E5B480",c_3: "#4DDDE0",c_4: "#ADEBF0"};
 ////////////////////////
 ////////////////////////
 //      data load     //
@@ -31,13 +32,16 @@ socket.on("data_load_s",(database,data) => {
     }
 })
 // socket.emit("data_save",""+user.imail+user.lisens+"users",JSON.stringify(users_data));
-socket.emit("data_load",""+user.imail+user.lisens+"siparisler");
+if (user !== null && sessionStorage.getItem("user") !== "") {
+    colors = user.colors;
+    console.log(user.colors)
+    socket.emit("data_load",""+user.imail+user.lisens+"siparisler");
+}
 socket.on("data_load",(database,data)=> {
     if (database == ""+user.imail+user.lisens+"menolar") {
         if(data != "") {
             menolar_data = JSON.parse(data);
         }
-        console.log(menolar_data);
         paszamine_s.innerHTML = "";
         meno_ekle = new MenoEkle();
         menolar = new Menolar();
@@ -46,7 +50,7 @@ socket.on("data_load",(database,data)=> {
         if(data != "") {
             urunler_data = JSON.parse(data);
         }
-        console.log(urunler_data);
+     
         paszamine_s.innerHTML = "";
         urun_ekle = new UrunEkle();
         urunler = new Urunler();
@@ -55,7 +59,6 @@ socket.on("data_load",(database,data)=> {
         if(data != "") {
             qrcods_data = JSON.parse(data);
         }
-        console.log(qrcods_data);
         paszamine_s.innerHTML = "";
         qrcodes = new QrCodEkle();
     }
@@ -63,7 +66,6 @@ socket.on("data_load",(database,data)=> {
         if(data != "") {
             siparisler_data = JSON.parse(data);
         }
-        console.log(siparisler_data);
         paszamine_s.innerHTML = "";
         siparisler = new Siparisler();
     }
@@ -71,7 +73,6 @@ socket.on("data_load",(database,data)=> {
         if(data != "") {
             users_data = JSON.parse(data);
         }
-        console.log(users_data);
         paszamine_s.innerHTML = "";
         users = new Users();
     }
@@ -79,7 +80,6 @@ socket.on("data_load",(database,data)=> {
         if(data != "") {
             kasa_data = JSON.parse(data);
         }
-        console.log(kasa_data);
         paszamine_s.innerHTML = "";
         kasa = new Kasa();
     }
@@ -113,7 +113,7 @@ let navarabzar;
 function NavarAbzar() {
     function Abzar(name) {
         let icon = CrateElement("span",name,"","material-symbols-rounded");
-        icon.style.cssText = "font-size: "+AndazeBaraks(10,15)+"px;color: "+colors.c_4+";margin-left: 10%;margin-top: "+AndazeBaraks(5,10)+"px;margin-bottom: "+AndazeBaraks(5,10)+"px;";
+        icon.style.cssText = "font-size: "+AndazeBaraks(10,15)+"px;color: "+colors.c_4+";margin-left: 10%;margin-top: "+AndazeBaraks(2,5)+"px;margin-bottom: "+AndazeBaraks(5,10)+"px;";
         return icon;
     }
     this.paszamine = CrateElement("div");
@@ -123,6 +123,7 @@ function NavarAbzar() {
     this.users = Abzar("group");
     this.kasa = Abzar("currency_exchange");
     this.qrcodes = Abzar("qr_code_2");
+    this.edit = Abzar("auto_awesome");
     this.home.addEventListener("click",(e) => {
         e.stopPropagation();
         socket.emit("data_load",""+user.imail+user.lisens+"siparisler");
@@ -140,6 +141,10 @@ function NavarAbzar() {
         e.stopPropagation();
         socket.emit("data_load",""+user.imail+user.lisens+"kasa");
     })
+    this.edit.addEventListener("click",(e) => {
+        e.stopPropagation();
+        tem = new Tem();
+    })
     this.Crate();
 }
 NavarAbzar.prototype.Crate = function() {
@@ -149,6 +154,7 @@ NavarAbzar.prototype.Crate = function() {
     this.paszamine.appendChild(this.users);
     this.paszamine.appendChild(this.kasa);
     this.paszamine.appendChild(this.qrcodes);
+    this.paszamine.appendChild(this.edit);
 }
 navarabzar = new NavarAbzar();
 ///////////////////////
@@ -215,7 +221,6 @@ function MenoEkle () {
             let totall = Math.floor(total*1000);
             this.uploding.style.width = fileloaded + "%";
             this.icon.style.color = colors.c_1;
-            console.log(fileloaded,totall)
         })
         http.send(data);
     })
@@ -262,7 +267,6 @@ function Meno(id_,name_,img_) {
         e.stopPropagation();
         paszamine_s.innerHTML = "";
         localStorage.setItem("meno_id",this.id);
-        console.log(this.id);
         meno_ekle = new Menoedit(SerchId(this.id,menolar_data));
     })
 }
@@ -359,7 +363,6 @@ function Menoedit (data) {
             if(Number(e.id) == Number(localStorage.getItem("meno_id"))&& this.file.files.length < 1) {
                 menolar_data[sira] = {id: e.id,meno_name: this.text.value,img: this.imgsrc}
 
-                console.log(e);
             }
             if(Number(e.id) == Number(localStorage.getItem("meno_id"))&& this.file.files.length > 0) {
                 menolar_data[sira]  = {id: e.id,meno_name: this.text.value,img: this.file.files[0].name};
@@ -464,7 +467,6 @@ function UrunEkle () {
         e.stopPropagation();
         if(this.file.files.length > 0 && this.text.value !== "" && this.text_aciklama.value !== "",this.text_fiyat.value !== "") {
         urunler_data.push({id: ID_ara(urunler_data),meno_name: this.text.value,img: this.file.files[0].name,aciklama: this.text_aciklama.value,fiyat: this.text_fiyat.value,meno_id: localStorage.getItem("meno_id")});
-        console.log(urunler_data);
         socket.emit("data_save",""+user.imail+user.lisens+"urunler",JSON.stringify(urunler_data));
         this.m_add_paszamine.style.display = "none";
         }
@@ -630,14 +632,12 @@ function Urunedit (data) {
             if(Number(e.id) == Number(localStorage.getItem("urun_id"))&& this.file.files.length < 1) {
                 urunler_data[sira] = {id: e.id,meno_name: this.text.value,img: this.imgsrc,aciklama: this.text_aciklama.value,fiyat: this.text_fiyat.value,meno_id: localStorage.getItem("meno_id")}
 
-                console.log(e);
             }
             if(Number(e.id) == Number(localStorage.getItem("urun_id"))&& this.file.files.length > 0) {
                 urunler_data[sira]  = {id: e.id,meno_name: this.text.value,img: this.file.files[0].name,aciklama: this.text_aciklama.value,fiyat: this.text_fiyat.value,meno_id: localStorage.getItem("meno_id")}
             }
             sira++;
         });
-        console.log(urunler_data);
         socket.emit("data_save",""+user.imail+user.lisens+"urunler",JSON.stringify(urunler_data));
         this.m_add_paszamine.style.display = "none";
         
@@ -942,7 +942,6 @@ Siparisler.prototype.Crate = function() {
     this.siparis.forEach(e => {
         this.paszamine.appendChild(e.paszamine);
     });
-    console.log(this.siparis)
 }
 
 ///////////////////////
@@ -987,7 +986,6 @@ function Users() {
     this.users = [];
     this.shomar = users_data.length-1;
     users_data.forEach(e => {
-        console.log(this.users)
         this.users.push(new User(users_data[this.shomar]));
         this.shomar = this.shomar - 1;
     })
@@ -1061,12 +1059,10 @@ function Kasa() {
     this.tarih = ""+this.yil+"-"+this.ay+"-"+this.gun+"";
     this.data = Tarih_Ara(kasa_data,this.tarih,this.tarih);
     
-    console.log(this.tarih);
     this.shomar = this.data.length-1;
     this.shomar_fiyat = 0;
     this.data.forEach(e => {
         this.shomar_fiyat += Number(e.adet)*Number(e.fiyat);
-        console.log(this.kasa)
         this.kasa.push(new kasa_(this.data[this.shomar]));
         this.shomar = this.shomar - 1;
     })
@@ -1101,7 +1097,6 @@ Kasa.prototype.CrateBord = function() {
     this.shomar_fiyat = 0;
     this.data.forEach(e => {
         this.shomar_fiyat += Number(e.adet)*Number(e.fiyat);
-        console.log(this.data)
         this.kasa.push(new kasa_(this.data[this.shomar]));
         this.shomar = this.shomar - 1;
     })
@@ -1110,7 +1105,6 @@ Kasa.prototype.CrateBord = function() {
 
     this.kasa.forEach(e => {
         this.paszamine.appendChild(e.paszamine);
-        console.log(this.kasa)
     })
     this.paszamine.appendChild(this.toplam_fiyati);
 }
@@ -1127,10 +1121,115 @@ Kasa.prototype.Crate = function() {
     paszamine_s.appendChild(this.paszamine);
     this.kasa.forEach(e => {
         this.paszamine.appendChild(e.paszamine);
-        console.log(this.kasa)
     })
     this.paszamine.appendChild(this.toplam_fiyati);
 }
 
+///////////////////////
+////////////////////////
+//        tem         //
+////////////////////////
+////////////////////////
+function Tem() {
+    this.styles = {
+        paszamine: "width: 100%;height: 100%;float: left;",
+        inputs: "display: none",
+        divs: "width: 100%;height: 22%;float: left",
+        save: "width: 100%;height: 12%;float: left;font-size: 10vw;background-color: "+colors.c_2+";border: solid .5vw "+colors.c_3+";color: "+colors.c_3+""
+    }
+    this.paszamine = CrateElement("div");
+    this.paszamine.style.cssText = this.styles.paszamine;
+    this.color1_input = CrateElement("input","","","","color");
+    this.color1_input.style.cssText = this.styles.inputs;
+    this.color1_input.value = colors.c_1;
+    this.color1_div = CrateElement("div");
+    this.color1_div.style.cssText = this.styles.divs+";background-color: "+colors.c_1+"";
 
-export{user};
+    this.color2_input = CrateElement("input","","","","color");
+    this.color2_input.style.cssText = this.styles.inputs;
+    this.color2_input.value = colors.c_1;
+    this.color2_div = CrateElement("div");
+    this.color2_div.style.cssText = this.styles.divs+";background-color: "+colors.c_2+"";
+
+    this.color3_input = CrateElement("input","","","","color");
+    this.color3_input.style.cssText = this.styles.inputs;
+    this.color3_input.value = colors.c_1;
+    this.color3_div = CrateElement("div");
+    this.color3_div.style.cssText = this.styles.divs+";background-color: "+colors.c_3+"";
+
+    this.color4_input = CrateElement("input","","","","color");
+    this.color4_input.style.cssText = this.styles.inputs;
+    this.color4_input.value = colors.c_1;
+    this.color4_div = CrateElement("div");
+    this.color4_div.style.cssText = this.styles.divs+";background-color: "+colors.c_4+"";
+
+    this.save = CrateElement("input","","","","button");
+    this.save.style.cssText = this.styles.save;
+    this.save.value = "save";
+    this.Crate();
+    this.color1_div.addEventListener("click",(e) => {
+        e.stopPropagation();
+        this.color1_input.click();
+    })
+    this.color1_input.addEventListener("input",() => {
+        user.colors.c_1 = this.color1_input.value;
+        localStorage.setItem("user",JSON.stringify(user))
+        this.color1_div.style.backgroundColor = this.color1_input.value;
+    })
+
+    this.color2_div.addEventListener("click",(e) => {
+        e.stopPropagation();
+        this.color2_input.click();
+    })
+    this.color2_input.addEventListener("input",() => {
+        user.colors.c_2 = this.color2_input.value;
+        localStorage.setItem("user",JSON.stringify(user))
+        this.color2_div.style.backgroundColor = this.color2_input.value;
+    })
+
+    this.color3_div.addEventListener("click",(e) => {
+        e.stopPropagation();
+        this.color3_input.click();
+    })
+    this.color3_input.addEventListener("input",() => {
+        user.colors.c_3 = this.color3_input.value;
+        localStorage.setItem("user",JSON.stringify(user))
+        this.color3_div.style.backgroundColor = this.color3_input.value;
+    })
+
+    this.color4_div.addEventListener("click",(e) => {
+        e.stopPropagation();
+        this.color4_input.click();
+    })
+    this.color4_input.addEventListener("input",() => {
+        user.colors.c_4 = this.color4_input.value;
+        localStorage.setItem("user",JSON.stringify(user))
+        this.color4_div.style.backgroundColor = this.color4_input.value;
+    })
+
+    this.save.addEventListener("click",() => {
+        open(location.href);
+    })
+}
+Tem.prototype.Crate = function() {
+    paszamine_s.innerHTML = "";
+    paszamine_s.appendChild(this.paszamine);
+    this.paszamine.appendChild(this.color1_input);
+    this.paszamine.appendChild(this.color1_div);
+
+    this.paszamine.appendChild(this.color2_input);
+    this.paszamine.appendChild(this.color2_div);
+
+    this.paszamine.appendChild(this.color3_input);
+    this.paszamine.appendChild(this.color3_div);
+
+    this.paszamine.appendChild(this.color4_input);
+    this.paszamine.appendChild(this.color4_div);
+
+    this.paszamine.appendChild(this.save);
+
+}
+
+
+
+export{user,colors};
