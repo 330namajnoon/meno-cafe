@@ -1,6 +1,6 @@
 ///////  imports
 
-import{araye_element_remove,SerchId,ID_ara,CrateElement,AndazeBaraks,filter,Tarih_Ara} from "./acharfaranse.js";
+import{araye_element_remove,SerchId,ID_ara,CrateElement,AndazeBaraks,filter,Tarih_Ara,ChengeElements} from "./acharfaranse.js";
 
 ///////////////////////
 ////////////////////////
@@ -18,12 +18,14 @@ let colors = {c_1: "#906A50",c_2: "#E5B480",c_3: "#4DDDE0",c_4: "#ADEBF0"};
 ////////////////////////
 ////////////////////////
 let socket = io();
+let admin_users_data = [];
 let menolar_data = [];
 let urunler_data = [];
 let qrcods_data = [];
 let kasa_data = [];
 let users_data = [{id:1,user_name: "sina",imail: "sina.majnoonhjk@gmail.com"}];
 let siparisler_data = [{id:1,urun_adi: "cafe con leche",aciklama: "sekersiz",fiyat: 10,adet: 2,masa_no: "masa1"}];
+socket.emit("data_load","admin_users");
 socket.on("data_load_s",(database,data) => {
     if (database == ""+user.imail+user.lisens+"siparisler") {
         if(data != "") {
@@ -82,6 +84,11 @@ socket.on("data_load",(database,data)=> {
         }
         paszamine_s.innerHTML = "";
         kasa = new Kasa();
+    }
+    if (database == "admin_users") {
+        if(data != "") {
+            admin_users_data = JSON.parse(data);
+        }
     }
 })
 
@@ -732,7 +739,7 @@ function QrCodEkle() {
     })
     this.button.addEventListener("click",(e) => {
         e.stopPropagation();
-        let url = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data="+location.origin+"/index.html?masa="+this.text.value+"?admin="+user.imail+"";
+        let url = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data="+location.origin+"/index.html?data="+this.text.value+"=="+user.imail+"";
         qrcods_data.push({id: ID_ara(qrcods_data),name: this.text.value,url: url});
         socket.emit("data_save",""+user.imail+user.lisens+"qrcodes",JSON.stringify(qrcods_data));
     })
@@ -1208,7 +1215,10 @@ function Tem() {
     })
 
     this.save.addEventListener("click",() => {
+        let data = ChengeElements(admin_users_data,user.id,"id",user.colors,"colors");
+        socket.emit("data_save","admin_users",JSON.stringify(data));
         open(location.href);
+        
     })
 }
 Tem.prototype.Crate = function() {

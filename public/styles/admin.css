@@ -10,37 +10,6 @@ body {
     height: 100%;
     overflow-y: auto;
 }
-#test {
-  width: 70%;height: 70%;margin-left: 15%;margin-top: 15%;
-  width: 100%;height: 25%;float: left;border: solid .5vw chocolate;background-color: #ADEBF0;
-  border: solid .5vw rebeccapurple;
-}
-#test1 {
-    width: 100%;
-    border-radius: 5vw;
-}
-#test2 {
-    top: 0;
-    position: absolute;
-    width: 100%;
-    height: auto;
-    background-color: red;
-    text-align: center;
-}
-#test3 {
-    color: aqua;
-    font-size: 10vw;
-    margin: 0;
-
-}
-#test4 {
-    position: absolute;
-    font-size: 10vw;
-    color: rgb(255, 0, 0);
-    left: 2%;
-    top: 2%;
-
-}
 
 #meno_add_span {
     float: right;

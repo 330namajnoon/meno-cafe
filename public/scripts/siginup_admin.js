@@ -100,7 +100,6 @@ function userSave(data) {
   
     if (data.lisens == lisens && ObjectSerch("imail",data.imail,users_data) == false) {
         users_data.push(data);
-        console.log(users_data);
         socket.emit("data_save","admin_users",JSON.stringify(users_data));
         localStorage.setItem("user",JSON.stringify(user));
         sessionStorage.setItem("user","true");

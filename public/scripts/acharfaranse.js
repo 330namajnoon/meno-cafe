@@ -96,5 +96,15 @@ function Tarih_Ara(data_,tarih1_,tarih2_) {
 
 }
 
+function ChengeElements(element,value,e_method,chenging_element,e_ch_method) {
+    let data = element;
+    data.forEach(e => {
+        if(e[e_method] == value) {
+            e[e_ch_method] = chenging_element;
+        }
+    })
+    return data;
+}
 
-export{araye_element_remove,SerchId,ID_ara,CrateElement,AndazeBaraks,filter,Tarih_Ara};
+
+export{araye_element_remove,SerchId,ID_ara,CrateElement,AndazeBaraks,filter,Tarih_Ara,ChengeElements};
