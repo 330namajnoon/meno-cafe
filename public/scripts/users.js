@@ -60,6 +60,7 @@ socket.on("data_load",(database,data) => {
         if(data != "") {
             siparisler_data = JSON.parse(data);
         }
+        socket.emit("user_siparis");
     }
 })
 
@@ -309,6 +310,7 @@ function Siparis_ekle(data,img) {
             let ay = date.getMonth()+1;
             let gun = date.getDate();
             let data_ = {
+                id: ID_ara(siparisler_data),
                 musteri_adi: "sina",
                 urun_adi: this.data.urun_adi,
                 aciklama: this.data.aciklama,
@@ -324,6 +326,7 @@ function Siparis_ekle(data,img) {
             siparisler_data.push(data_);
             socket.emit("data_save",""+admin+"siparisler",JSON.stringify(siparisler_data));
             socket.emit("data_load",""+admin+"urunler");
+        
         
         
     })

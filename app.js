@@ -52,7 +52,13 @@ io.on('connection', (client) => {
         })
         
     })
-    client.on("data_save_s",(database,data) => {
+    client.on("data_load_s",(database,istek,data2)=> {
+        fs.readFile("./data/"+database+".txt", function (err, data) {
+            client.emit("data_load_s",data.toString(),istek,data2);
+        })
+        
+    })
+    client.on("data_save_s",(database,data,istek,data2) => {
         fs.writeFile("./data/"+database+".txt", data, function (err) {
             if (err) throw err;
             console.log('Saved!');
@@ -60,7 +66,7 @@ io.on('connection', (client) => {
 
             fs.readFile("./data/"+database+".txt", function (err, data) {
 
-                client.emit("data_load_s",database,data.toString());
+                client.emit("data_save_s",database,data.toString(),istek,data2);
                 
 
             })
@@ -91,6 +97,13 @@ io.on('connection', (client) => {
             let fs = require('fs');
         });
 
+    })
+
+
+    //////// user siparis
+    client.on("user_siparis",() => {
+        console.log("user_siparis");
+        client.emit("admin_siparis");
     })
 
 

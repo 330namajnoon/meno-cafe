@@ -156,7 +156,12 @@ function Login() {
         users_data.forEach(e => {
             if (e.imail == this.imail.value && e.password == this.sifre.value) {
                 let us = JSON.parse(localStorage.getItem("user"));
-                e.colors = us.colors || colors;
+                if(us !== null) {
+                    e.colors = us.colors
+                }else {
+                    e.colors = colors;
+                }
+            
                 sessionStorage.setItem("user","true");
                 localStorage.setItem("user",JSON.stringify(e));
                 durum = true;
