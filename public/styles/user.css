@@ -10,6 +10,7 @@ body {
    position: relative;width: 100%;height: auto;font-size: 10vw;background-color: antiquewhite;color: aqua;border: solid .5vw red;float: left;margin-top: 10vw;text-align: center;
    position: relative;width: 20vw;height: 20vw;font-size: 10vw;padding: 2vw;border-radius: 20vw;border: solid .5vw rebeccapurple;background-color: aliceblue;
    position: absolute;font-size: 5vw;top: 0;left: 0;color: aliceblue;
+   overflow-y: auto;
 }
 
 #meno_div {

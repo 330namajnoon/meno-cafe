@@ -26,17 +26,15 @@ let kasa_data = [];
 let users_data = [{id:1,user_name: "sina",imail: "sina.majnoonhjk@gmail.com"}];
 let siparisler_data = [{id:1,urun_adi: "cafe con leche",aciklama: "sekersiz",fiyat: 10,adet: 2,masa_no: "masa1"}];
 
-// socket.on("data_load_s",(database,data) => {
-//     if (database == ""+user.imail+user.lisens+"siparisler") {
-//         if(data != "") {
-//             kasa_data = JSON.parse(data);
-//         }
-//     }
-// })
-// socket.emit("data_save",""+user.imail+user.lisens+"users",JSON.stringify(users_data));
+socket.on("data_load_s",(database,data) => {
+    if (database == ""+user.imail+user.lisens+"siparisler") {
+        if(data != "") {
+            kasa_data = JSON.parse(data);
+        }
+    }
+})
 if (user !== null && sessionStorage.getItem("user") !== "") {
     colors = user.colors;
-    console.log(user.colors)
     socket.emit("data_load","admin_users");
     socket.emit("data_load",""+user.imail+user.lisens+"siparisler");
 }
@@ -96,7 +94,9 @@ socket.on("data_load",(database,data,istek,data2) => {
 
 })
 socket.on("admin_siparis",() => {
-    console.log("salam");
+    socket.emit("data_load",""+user.imail+user.lisens+"siparisler");
+})
+socket.on("user_siparis", ()=> {
     socket.emit("data_load",""+user.imail+user.lisens+"siparisler");
 })
 
@@ -883,9 +883,7 @@ function Siparisler() {
 
         this.sil.addEventListener("click",(e) => {
             e.stopPropagation();
-            console.log(this.data.id);
             siparisler_data = araye_element_remove(siparisler_data,this.data.id,"id");
-            console.log(siparisler_data)
             socket.emit("data_save",""+user.imail+user.lisens+"siparisler",JSON.stringify(siparisler_data));
         })
         this.onayla.addEventListener("click",(e) => {

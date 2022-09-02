@@ -9,16 +9,18 @@ import {araye_element_remove,SerchId,ID_ara,CrateElement,AndazeBaraks,filter,Tar
 //   elements    //
 ///////////////////
 ///////////////////
-let admin,masa_no,colors,paszamine,menolar,urunler,siparis_ekle;
+let admin,masa_no,colors,paszamine,menolar,urunler,siparis_ekle,sabad,login,username;
 ///////////////////
 ///////////////////
 //   data load   //
 ///////////////////
 ///////////////////
 let socket = io();
+let sabad_data = [];
 let menolar_data = [];
 let urunler_data = [];
 let siparisler_data = [];
+
 
 socket.emit("data_load","admin_users");
 
@@ -34,9 +36,15 @@ socket.on("data_load",(database,data) => {
                 admin = element.imail+element.lisens;
                 masa_no = u_m[0];
                 colors = element.colors;
+                if(localStorage.getItem("username") !== null ) {
                 paszamine = new Paszamine();
                 socket.emit("data_load",""+admin+"menolar");
                 socket.emit("data_load",""+admin+"siparisler");
+                let username_ = JSON.parse(localStorage.getItem("username"));
+                username = username_.username;
+                }else {
+                    login = new Login();
+                }
             }
         });
     }
@@ -60,7 +68,60 @@ socket.on("data_load",(database,data) => {
         if(data != "") {
             siparisler_data = JSON.parse(data);
         }
+        
+    }
+})
+
+socket.on("data_load_s",(database,data,data2) => {
+   
+    if(database == ""+admin+"siparisler") {
+        
+        siparisler_data = JSON.parse(data);
+        sabad_data.forEach(e => {
+            e.id = ID_ara(siparisler_data);
+            siparisler_data.push(e);
+        })
+        socket.emit("data_save_s",""+admin+"siparisler",JSON.stringify(siparisler_data));
+    }
+    if(database == ""+admin+"users") {
+        
+        let users_data = JSON.parse(data);
+        let durum = false;
+        users_data.forEach(e => {
+            if(e.imail == data2.imail) {
+                durum = true;
+            }
+        })
+        if(durum == false) {
+            users_data.push({id: ID_ara(users_data),user_name: data2.username,imail: data2.imail});
+            localStorage.setItem("username",JSON.stringify({id: ID_ara(users_data),user_name: data2.username,imail: data2.imail}));
+            socket.emit("data_save",""+admin+"users",JSON.stringify(users_data));
+            paszamine = new Paszamine();
+            socket.emit("data_load",""+admin+"menolar");
+            socket.emit("data_load",""+admin+"siparisler");
+            username = data2.username;
+
+        }else {
+            localStorage.setItem("username",JSON.stringify({id: ID_ara(users_data),user_name: data2.username,imail: data2.imail}));
+            paszamine = new Paszamine();
+            socket.emit("data_load",""+admin+"menolar");
+            socket.emit("data_load",""+admin+"siparisler");
+            username = data2.username;
+
+        }
+        sabad_data.forEach(e => {
+            e.id = ID_ara(siparisler_data);
+            siparisler_data.push(e);
+        })
+        
+    }
+})
+socket.on("data_save_s",(database,data) => {
+   
+    if(database == ""+admin+"siparisler") {
         socket.emit("user_siparis");
+        socket.emit("data_load",""+admin+"menolar");
+        sabad_data = [];
     }
 })
 
@@ -98,8 +159,16 @@ function Paszamine() {
         e.stopPropagation();
         socket.emit("data_load",""+admin+"menolar");
     })
+    this.sabad_span.addEventListener("click",(e) => {
+        if(this.sabad_adet.innerHTML !== "0") {
+        this.paszamine_s.innerHTML = "";
+        sabad = new Sabad();
+        }
+    })
+    
 }
 Paszamine.prototype.Crate = function() {
+    document.getElementById("body").innerHTML = "";
     document.getElementById("body").appendChild(this.paszamine);
     this.paszamine.appendChild(this.sartitr);
     this.paszamine.appendChild(this.paszamine_s);
@@ -281,7 +350,7 @@ function Siparis_ekle(data,img) {
     this.aciklama_ekle.style.cssText = this.styles.div+";font-size: 5vw;height: 10vw";
 
     this.save = CrateElement("input","","","","button");
-    this.save.value = "comprar";
+    this.save.value = "confirmar";
     this.save.style.cssText = this.styles.masomenos+";height: 18vw;width: 60%;border-radius: 2vw;font-size: 7vw;margin-left: 20%";
     
     this.Crate();
@@ -301,32 +370,34 @@ function Siparis_ekle(data,img) {
     })
     this.save.addEventListener("click",(e) => {
         e.stopPropagation();
-        paszamine.sabad_adet.style.display = "grid";
-        let sabad = Number(paszamine.sabad_adet.innerHTML);
-        sabad += Number(this.adet.innerHTML);
-        paszamine.sabad_adet.innerHTML = sabad;
+        if(this.adet.innerHTML !== "0") {
+            paszamine.sabad_adet.style.display = "grid";
+            let sabad = Number(paszamine.sabad_adet.innerHTML);
+            sabad += Number(this.adet.innerHTML);
+            paszamine.sabad_adet.innerHTML = sabad;
             let date = new Date();
             let yil = date.getFullYear();
             let ay = date.getMonth()+1;
             let gun = date.getDate();
             let data_ = {
-                id: ID_ara(siparisler_data),
-                musteri_adi: "sina",
+                id: ID_ara(sabad_data),
+                musteri_adi: username,
                 urun_adi: this.data.urun_adi,
                 aciklama: this.data.aciklama,
                 fiyat: this.data.fiyat,
                 adet: this.adet.innerHTML,
                 masa_no: masa_no,
-                tarih: yil+"-"+ay+"-"+gun
+                tarih: yil+"-"+ay+"-"+gun,
+                img: this.img_url
             };
             if(this.aciklama_ekle.value != "") {
                 data_.aciklama = this.aciklama_ekle.value;
             }
             
-            siparisler_data.push(data_);
-            socket.emit("data_save",""+admin+"siparisler",JSON.stringify(siparisler_data));
+            sabad_data.push(data_);
+           
             socket.emit("data_load",""+admin+"urunler");
-        
+        }
         
         
     })
@@ -349,6 +420,180 @@ Siparis_ekle.prototype.Crate = function() {
     this.paszamine.appendChild(this.aciklama_ekle);
     this.paszamine.appendChild(this.save);
 }
+
+///////////////////
+///////////////////
+// sabad kharid  //
+///////////////////
+///////////////////
+function Sabad() {
+    function sabad(data) {
+        this.data = data;
+        this.styles = {
+            paszamine: "border-radius: 8vw;margin-left: 7.5%;margin-top: 5vw;width: 85%;height: auto;float: left;position: relative;border: solid .5vw "+colors.c_1+";",
+            back_span: "margin-left: 2%;margin-top: 2vw;font-size: 10vw;color: "+colors.c_3+";position: relative;",
+            img: "border-radius: 8vw;float: left;width: 100%;height: 100%;position: absolute;top: 0;left: 0;object-fit: cover;filter: blur(1vw);",
+            div: "position: relative;width: 99%;height: auto;font-size: 10vw;background-color: "+colors.c_4+";color: "+colors.c_1+";border: solid .5vw "+colors.c_1+";float: left;margin-top: 8vw;text-align: center;",
+            masomenos: "border-radius: 0vw 0 7vw 7vw;position: relative;width: 20vw;height: auto;background-color: "+colors.c_1+";color: "+colors.c_3+";float: left;margin-top: 8vw;text-align: center;"
+            
+        }
+        this.paszamine = CrateElement("div");
+        this.paszamine.style.cssText = this.styles.paszamine;
+
+        this.img = CrateElement("img");
+        this.img.src = "../images/"+this.data.img;
+        this.img.style.cssText = this.styles.img;
+        this.urun_name = CrateElement("div",""+this.data.urun_adi+"");
+        this.urun_name.style.cssText = this.styles.div;
+        
+        if(Number(this.data.adet) == 1) {
+            this.adet = CrateElement("div",""+this.data.adet+" pieza");
+        }else {
+            this.adet = CrateElement("div",""+this.data.adet+" piezas");
+        }
+        this.adet.style.cssText = this.styles.div;
+        
+    
+        this.aciklama = CrateElement("div",""+this.data.aciklama+"");
+        this.aciklama.style.cssText = this.styles.div;
+    
+        this.fiyat = CrateElement("div",""+Number(this.data.adet)*Number(this.data.fiyat)+" €");
+        this.fiyat.style.cssText = this.styles.div;
+
+        this.delete = CrateElement("div");
+        this.delete.style.cssText = this.styles.masomenos+";height: auto;width: 100%;font-size: 7vw";
+        this.delete_span = CrateElement("span","delete","","material-symbols-rounded")
+        this.delete_span.style.cssText = this.styles.back_span;
+        
+        this.Crate();
+        this.delete.addEventListener("click",(e) => {
+            sabad_data = araye_element_remove(sabad_data,this.data.id,"id");
+            paszamine.paszamine_s.innerHTML = "";
+            paszamine.sabad_adet.innerHTML = ""+(Number(paszamine.sabad_adet.innerHTML)-Number(this.data.adet))+"";
+            sabad = new Sabad();
+            if (Number(paszamine.sabad_adet.innerHTML) <= 0) {
+                socket.emit("data_load",""+admin+"menolar");
+            }
+        })
+       
+        
+    }
+    sabad.prototype.Crate = function() {
+        this.paszamine.appendChild(this.img);
+        this.paszamine.appendChild(this.urun_name);
+        this.paszamine.appendChild(this.aciklama);
+        this.paszamine.appendChild(this.adet);
+        this.paszamine.appendChild(this.fiyat);
+        this.paszamine.appendChild(this.delete);
+        this.delete.appendChild(this.delete_span);
+        
+    }
+    this.styles = {
+        paszamine: "overflow-y: auto;width: 100%;height: 85%;float: left;position: relative;",
+        back_span: "margin-left: 2%;margin-top: ,5vw;float: left;font-size: 15vw;color: "+colors.c_3+";position: relative;",
+        img: "float: left;width: 100%;height: 100%;position: absolute;top: 0;left: 0;object-fit: cover;filter: blur(2vw);",
+        div: "position: relative;width: 100%;height: auto;font-size: 10vw;background-color: "+colors.c_4+";color: "+colors.c_1+";border: solid .5vw "+colors.c_1+";float: left;margin-top: 8vw;text-align: center;",
+        masomenos: "margin-left: 9%;border-radius: 30vw;position: relative;width: 20vw;height: 20vw;font-size: 17vw;background-color: "+colors.c_1+";color: "+colors.c_3+";border: solid .5vw "+colors.c_3+";float: left;margin-top: 8vw;text-align: center;"
+        
+    }
+    this.paszamine = CrateElement("div");
+    this.paszamine.style.cssText = this.styles.paszamine;
+    this.save = CrateElement("input","","","","button");
+    this.toplamfiyati = 0;
+   
+    sabad_data.forEach(e => {
+        this.toplamfiyati += (Number(e.adet)*Number(e.fiyat));
+    })
+    this.save.value = "orden "+this.toplamfiyati+" €";
+    this.save.style.cssText = this.styles.masomenos+";height: 18vw;width: 60%;border-radius: 2vw;font-size: 7vw;margin-left: 20%";
+    this.siparis = [];
+    sabad_data.forEach(e => {
+        this.siparis.push(new sabad(e));
+    })
+    this.Crate();
+    this.save.addEventListener("click",(e) => {
+        e.stopPropagation();
+        paszamine.sabad_adet.innerHTML = "0";
+        paszamine.sabad_adet.style.display = "none";
+        socket.emit("data_load_s",""+admin+"siparisler");
+    })
+}
+Sabad.prototype.Crate = function() {
+    paszamine.paszamine_s.appendChild(this.paszamine);
+   
+    this.siparis.forEach(e => {
+        this.paszamine.appendChild(e.paszamine);
+    })
+    this.paszamine.appendChild(this.save);
+
+}
+
+///////////////////
+///////////////////
+//     login     //
+///////////////////
+///////////////////
+
+function Login() {
+    this.styles = {
+        s1: "border-radius: 3vw;margin-top: 5vw;width: 100%;height: 10vw;background-color: "+colors.c_4+"; border: solid .5vw "+colors.c_3+"; color: "+colors.c_1+";font-size: 5vw;"
+    }
+    this.eror = document.createElement("h1");
+    this.eror.innerHTML = "lutfen hepsini doldurun";
+    this.eror.style.cssText = "display: none;font-size: 6vw;color: red;";
+    this.paszamine = document.createElement("div");
+    this.paszamine.style.cssText = "text-align: center;width: 100%;height: "+innerHeight+"px;background-color: "+colors.c_2+";";
+    this.paszamine_s = document.createElement("div");
+    this.paszamine_s.style.cssText = "text-align: center;position: absolute;margin-top: 35%;margin-left: 10%;width: 80%;height: auto;";
+    this.imail = document.createElement("input");
+    this.imail.style.cssText = this.styles.s1;
+    this.imail.type = "text";
+    this.imail.setAttribute("placeholder","imail ...");
+    this.username = document.createElement("input");
+    this.username.style.cssText = this.styles.s1;
+    this.username.type = "text";
+    this.username.setAttribute("placeholder","nombre de usuario ...");
+   
+    this.save = document.createElement("input");
+    this.save.style.cssText = this.styles.s1+";height: 15vw;font-size: 7vw;width: 90%;margin-left: 5%;margin-top: 8vw";
+    this.save.type = "button";
+    this.save.value = "iniciar";
+
+    this.sigin = document.createElement("a");
+    this.sigin.innerHTML = "SIGINUP";
+    this.sigin.style.cssText = "font-size: 7vw;color: "+colors.c_1+";position: absolute;left:35%;top:120%";
+    this.sigin.addEventListener("click",(e) => {
+        e.stopPropagation();
+        document.getElementById("body").innerHTML = "";
+        sigin = new Sigin();
+    })
+    this.Crate();
+    this.save.addEventListener("click",(e)=> {
+        e.stopPropagation();
+       
+            if (this.imail.value !== "" &&  this.username.value !== "") {
+                socket.emit("data_load_s",""+admin+"users",{username: this.username.value,imail: this.imail.value});
+            }else {
+                this.eror.style.display = "grid";
+            }
+    
+       
+       
+    })
+}
+Login.prototype.Crate = function() {
+    document.getElementById("body").appendChild(this.paszamine);
+    this.paszamine.appendChild(this.paszamine_s);
+    this.paszamine_s.appendChild(this.eror);
+    this.paszamine_s.appendChild(this.username);
+    this.paszamine_s.appendChild(this.imail);
+    
+    this.paszamine_s.appendChild(this.save);
+    
+}
+
+
+
 
 
 
