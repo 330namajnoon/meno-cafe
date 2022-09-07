@@ -1,1 +1,0 @@
-[{"id":1,"meno_name":"nushidani","img":"sogukicecek.webp","aciklama":"chay","fiyat":"10","meno_id":"1"},{"id":2,"meno_name":"sharbat ablimu","img":"soguk-icecekler.webp","aciklama":"rangarang","fiyat":"12","meno_id":"2"}]

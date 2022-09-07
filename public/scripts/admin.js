@@ -9,15 +9,17 @@ import{araye_element_remove,SerchId,ID_ara,CrateElement,AndazeBaraks,filter,Tari
 ////////////////////////
 let user = JSON.parse(localStorage.getItem("user"));
 
-let meno_ekle,menolar,urun_ekle,urunler,qrcodes,siparisler,kasa,users,tem;
+let marca,paszamine_s,meno_ekle,menolar,urun_ekle,urunler,qrcodes,siparisler,kasa,users,tem;
 
 let colors = {c_1: "#906A50",c_2: "#E5B480",c_3: "#4DDDE0",c_4: "#ADEBF0"};
+let font;
 ////////////////////////
 ////////////////////////
 //      data load     //
 ////////////////////////
 ////////////////////////
 let socket = io();
+let styles_data = [];
 let admin_users_data = [];
 let menolar_data = [];
 let urunler_data = [];
@@ -34,11 +36,19 @@ socket.on("data_load_s",(database,data) => {
     }
 })
 if (user !== null && sessionStorage.getItem("user") !== "") {
+    font = user.fonts.font;
     colors = user.colors;
     socket.emit("data_load","admin_users");
+    socket.emit("data_load","style");
     socket.emit("data_load",""+user.imail+user.lisens+"siparisler");
 }
 socket.on("data_load",(database,data)=> {
+    if (database == "style") {
+        if(data != "") {
+            styles_data = JSON.parse(data);
+            console.log(styles_data);
+        }
+    }
     if (database == ""+user.imail+user.lisens+"menolar") {
         if(data != "") {
             menolar_data = JSON.parse(data);
@@ -177,9 +187,37 @@ navarabzar = new NavarAbzar();
 //paszamine sanaviye  //
 ////////////////////////
 ////////////////////////
-let paszamine_s = CrateElement("div");
-paszamine_s.style.cssText = "position: absolute;width: "+(innerWidth-filter(navarabzar.paszamine.style.width))+"px;height: 100%;left: "+filter(navarabzar.paszamine.style.width)+"px;top: 0px;background-color: "+colors.c_2+";"
+function Marca(marca) {
+   this.value = marca; 
+   this.styles = {
+    paszamine: "border: solid .9vw "+colors.c_4+";"+font+"text-align: center;left:"+navarabzar.paszamine.getBoundingClientRect().width+"px;top:0;position: absolute;float: left;width: "+((innerWidth-filter(navarabzar.paszamine.style.width))*.963)+"px;height: auto;background-color: "+colors.c_1+";color: "+colors.c_4+";font-size:10vw;padding-top:5vw;padding-bottom:5vw"
+   }
+   this.paszamine = CrateElement("input","","","","text");
+   this.paszamine.style.cssText = this.styles.paszamine;
+   this.paszamine.value = this.value;
+   this.paszamine.setAttribute("maxlength","15");
+   this.Crate();
+  
+}
+Marca.prototype.Crate = function() {
+    document.getElementById("body").appendChild(this.paszamine);
+   
+    
+}
+window.addEventListener("click",() => {
+    if(marca.paszamine.value !== user.marca) {
+        user.marca = marca.paszamine.value;
+        localStorage.setItem("user",JSON.stringify(user));
+        let data = ChengeElements(admin_users_data,user.id,"id",marca.paszamine.value,"marca");
+        socket.emit("data_save","admin_users",JSON.stringify(data));
+        open(location.href);
+    }
+})
+marca = new Marca(user.marca);
+paszamine_s = CrateElement("div");
+paszamine_s.style.cssText = ""+font+"position: absolute;width: "+(innerWidth-filter(navarabzar.paszamine.style.width))+"px;height: "+(innerHeight-marca.paszamine.getBoundingClientRect().height)+"px;left: "+filter(navarabzar.paszamine.style.width)+"px;top: "+marca.paszamine.getBoundingClientRect().height+"px;background-color: "+colors.c_2+";"
 document.getElementById("body").appendChild(paszamine_s);
+
 ///////////////////////
 ////////////////////////
 //      menolar       //
@@ -268,6 +306,7 @@ function Meno(id_,name_,img_) {
     this.img = CrateElement("img","","meno_img");
     this.img.src = "./images/"+img_;
     this.h1_div = CrateElement("div","","meno_h1_div");
+    this.h1_div.style.backgroundColor = colors.c_1+"84";
     this.h1 = CrateElement("h1",name_,"meno_h1");
     this.h1.style.color = colors.c_3;
     this.paszamine.appendChild(this.edit);
@@ -297,7 +336,7 @@ function Menolar() {
         e.paszamine.style.height = "40vw";
         e.h1_div.style.top = ((e.paszamine.getBoundingClientRect().height/2)-(e.h1_div.getBoundingClientRect().height/2))+"px";
     });
-    this.paszamine.style.cssText = " width: 100%;margin-top: "+(meno_ekle.ekle_icon.getBoundingClientRect().y+meno_ekle.ekle_icon.getBoundingClientRect().height)*1.3+"px;overflow-y: scroll;"
+    this.paszamine.style.cssText = " width: 100%;margin-top: "+(meno_ekle.ekle_icon.getBoundingClientRect().y+meno_ekle.ekle_icon.getBoundingClientRect().height)*.5+"px;overflow-y: scroll;"
     this.paszamine.style.height = innerHeight-this.paszamine.getBoundingClientRect().y+"px";
     
 }
@@ -320,6 +359,7 @@ function Menoedit (data) {
 
     this.delete = CrateElement("input","","delete","","button");
     this.delete.value = "Delete";
+    this.delete.style.cssText = " z-index: 1;margin-top: -30%;position: absolute;width: 50%;margin-left: 25%;height: 10vw;background-color: "+colors.c_4+";border: solid 0 ;color: "+colors.c_1+"";
     ////// urun adi
     this.text = CrateElement("input","","m_add_text","","text");
     this.text.value = data.meno_name;
@@ -515,14 +555,17 @@ function Urun(id_,name_,img_,aciklama_,fiyat_,meno_id_) {
     ///// urun adi
     
     this.h1_div = CrateElement("div","","meno_h1_div");
+    this.h1_div.style.backgroundColor = colors.c_1+"84";
     this.h1 = CrateElement("h1",name_,"meno_h1");
     this.h1.style.color = colors.c_3;
     ///// urun aciklama
     this.h1_div_aciklama = CrateElement("div","","meno_h1_div");
+    this.h1_div_aciklama.style.backgroundColor = colors.c_1+"84";
     this.h1_aciklama = CrateElement("h1",aciklama_,"meno_h1");
     this.h1_aciklama.style.color = colors.c_3;
     ///// urun fiyat
     this.h1_div_fiyat = CrateElement("div","","meno_h1_div");
+    this.h1_div_fiyat.style.backgroundColor = colors.c_1+"84";
     this.h1_fiyat = CrateElement("h1",""+fiyat_+" $","meno_h1");
     this.h1_fiyat.style.color = colors.c_3;
 
@@ -560,7 +603,7 @@ function Urunler() {
         e.paszamine.style.height = (((e.h1_div_fiyat.getBoundingClientRect().y+e.h1_div_fiyat.getBoundingClientRect().height)-e.paszamine.getBoundingClientRect().y)+(e.h1_div.getBoundingClientRect().height/2))+"px";
         
     });
-    this.paszamine.style.cssText = " width: 100%;margin-top: "+(urun_ekle.ekle_icon.getBoundingClientRect().y+urun_ekle.ekle_icon.getBoundingClientRect().height)*1.3+"px;overflow-y: scroll;"
+    this.paszamine.style.cssText = " width: 100%;margin-top: "+(urun_ekle.ekle_icon.getBoundingClientRect().y+urun_ekle.ekle_icon.getBoundingClientRect().height)*.6+"px;overflow-y: scroll;"
     this.paszamine.style.height = innerHeight-this.paszamine.getBoundingClientRect().y+"px";
     
 }
@@ -582,6 +625,7 @@ function Urunedit (data) {
     this.m_add_paszamine_s.style.cssText = "position: relative;float: left;width: 90%;height: auto;background-color: #adebf000;margin-left: 5%;margin-top: 20%;",
 
     this.delete = CrateElement("input","","delete","","button");
+    this.delete.style.cssText = " z-index: 1;margin-top: -30%;position: absolute;width: 50%;margin-left: 25%;height: 10vw;background-color: "+colors.c_4+";border: solid 0 ;color: "+colors.c_1+"";
     this.delete.value = "Delete";
     ////// urun adi
     this.text = CrateElement("input","","m_add_text","","text");
@@ -1146,105 +1190,105 @@ Kasa.prototype.Crate = function() {
 ////////////////////////
 ////////////////////////
 function Tem() {
+    function Colors(colors) {
+        this.colors = colors;
+        this.styles = {
+            paszamine: "min-width: 60vw;height: 60vw;float: left;position: relative;margin-left: 3vw;border-radius: 2vw 2vw 2vw 2vw;border: solid .5vw "+this.colors.c_1+"",
+            colors: "float: left;position: relative;width: 50%;height: 100%;background-color: red"
+        }
+        this.paszamine = CrateElement("div");
+        this.paszamine.style.cssText = this.styles.paszamine;
+        this.color_1 = CrateElement("div");
+        this.color_1.style.cssText = this.styles.colors+";width: 50%;height: 100%;background-color: "+this.colors.c_1+";border-radius: 2vw 0 0 2vw";
+
+        this.color_2 = CrateElement("div");
+        this.color_2.style.cssText = this.styles.colors+";width: 50%;height: 50%;background-color: "+this.colors.c_2+";border-radius: 0vw 2vw 0 0vw";
+
+        this.color_3 = CrateElement("div");
+        this.color_3.style.cssText = this.styles.colors+";width: 25%;height: 50%;background-color: "+this.colors.c_3+";border-radius: 0vw 0 0 0vw";
+
+        this.color_4 = CrateElement("div");
+        this.color_4.style.cssText = this.styles.colors+";width: 25%;height: 50%;background-color: "+this.colors.c_4+";border-radius: 0vw 0 2vw 0vw";
+        this.Crate();
+        
+        this.paszamine.addEventListener("click",(e) => {
+            e.stopPropagation();
+            user.colors = this.colors;
+            localStorage.setItem("user",JSON.stringify(user));
+            let data = ChengeElements(admin_users_data,user.id,"id",this.colors,"colors");
+            socket.emit("data_save","admin_users",JSON.stringify(data));
+            open(location.href)
+        })
+    }
+    Colors.prototype.Crate = function() {
+        this.paszamine.appendChild(this.color_1);
+        this.paszamine.appendChild(this.color_2);
+        this.paszamine.appendChild(this.color_3);
+        this.paszamine.appendChild(this.color_4);
+    }
+    function Fonts(fonts) {
+        this.fonts = fonts;
+        this.styles = {
+            paszamine: "color: "+colors.c_1+";background-color: "+colors.c_3+";text-align: center;margin-top: 2vw;margin-left: 5%;width: 85%;height: auto;float: left;position: relative;margin-left: 3vw;border-radius: 2vw 2vw 2vw 2vw;border: solid .5vw "+colors.c_1+";padding: 2vw;font-size:6vw",
+            fonts: "float: left;position: relative;width: 50%;height: 100%;background-color: red"
+        }
+        this.paszamine = CrateElement("div",this.fonts.name);
+        this.paszamine.style.cssText = this.styles.paszamine+";"+this.fonts.font+"";
+
+        this.paszamine.addEventListener("click",(e) => {
+            e.stopPropagation();
+            user.fonts = this.fonts;
+            localStorage.setItem("user",JSON.stringify(user));
+            let data = ChengeElements(admin_users_data,user.id,"id",this.fonts,"fonts");
+            socket.emit("data_save","admin_users",JSON.stringify(data));
+            
+            open(location.href)
+           
+        })
+       
+       
+    }
+   
     this.styles = {
         paszamine: "width: 100%;height: 100%;float: left;",
+        paszamine_s: "margin-left:5%;float: left;position: relative;width: 90%;height: auto;display: flex;margin-top: 5vw;padding-top: 2vw;padding-bottom: 2vw;border: solid .5vw "+colors.c_3+";",
+        paszamine_s2: "overflow-y: auto;display: block,height: 50vw;margin-left:5%;float: left;position: relative;width: 90%;height: 40%;margin-top: 5vw;padding-top: 2vw;padding-bottom: 2vw;border: solid .5vw "+colors.c_3+";",
         inputs: "display: none",
-        divs: "width: 100%;height: 22%;float: left",
-        save: "width: 100%;height: 12%;float: left;font-size: 10vw;background-color: "+colors.c_2+";border: solid .5vw "+colors.c_3+";color: "+colors.c_3+""
+        divs: "width: 100%;height: 22%;float: left"
+       
     }
+    
     this.paszamine = CrateElement("div");
     this.paszamine.style.cssText = this.styles.paszamine;
-    this.color1_input = CrateElement("input","","","","color");
-    this.color1_input.style.cssText = this.styles.inputs;
-    this.color1_input.value = colors.c_1;
-    this.color1_div = CrateElement("div");
-    this.color1_div.style.cssText = this.styles.divs+";background-color: "+colors.c_1+"";
 
-    this.color2_input = CrateElement("input","","","","color");
-    this.color2_input.style.cssText = this.styles.inputs;
-    this.color2_input.value = colors.c_1;
-    this.color2_div = CrateElement("div");
-    this.color2_div.style.cssText = this.styles.divs+";background-color: "+colors.c_2+"";
+    this.paszamine_colors = CrateElement("div");
+    this.paszamine_colors.style.cssText = this.styles.paszamine_s+";overflow-x: auto";
 
-    this.color3_input = CrateElement("input","","","","color");
-    this.color3_input.style.cssText = this.styles.inputs;
-    this.color3_input.value = colors.c_1;
-    this.color3_div = CrateElement("div");
-    this.color3_div.style.cssText = this.styles.divs+";background-color: "+colors.c_3+"";
+    this.paszamine_fonts = CrateElement("div");
+    this.paszamine_fonts.style.cssText = this.styles.paszamine_s2;
 
-    this.color4_input = CrateElement("input","","","","color");
-    this.color4_input.style.cssText = this.styles.inputs;
-    this.color4_input.value = colors.c_1;
-    this.color4_div = CrateElement("div");
-    this.color4_div.style.cssText = this.styles.divs+";background-color: "+colors.c_4+"";
-
-    this.save = CrateElement("input","","","","button");
-    this.save.style.cssText = this.styles.save;
-    this.save.value = "save";
-    this.Crate();
-    this.color1_div.addEventListener("click",(e) => {
-        e.stopPropagation();
-        this.color1_input.click();
+    this.colors = [];
+    styles_data.colorss.forEach(e => {
+        this.colors.push(new Colors(e));
     })
-    this.color1_input.addEventListener("input",() => {
-        user.colors.c_1 = this.color1_input.value;
-        localStorage.setItem("user",JSON.stringify(user))
-        this.color1_div.style.backgroundColor = this.color1_input.value;
+    this.fonts = [];
+    styles_data.fonts.forEach(e => {
+        this.fonts.push(new Fonts(e));
     })
-
-    this.color2_div.addEventListener("click",(e) => {
-        e.stopPropagation();
-        this.color2_input.click();
-    })
-    this.color2_input.addEventListener("input",() => {
-        user.colors.c_2 = this.color2_input.value;
-        localStorage.setItem("user",JSON.stringify(user))
-        this.color2_div.style.backgroundColor = this.color2_input.value;
-    })
-
-    this.color3_div.addEventListener("click",(e) => {
-        e.stopPropagation();
-        this.color3_input.click();
-    })
-    this.color3_input.addEventListener("input",() => {
-        user.colors.c_3 = this.color3_input.value;
-        localStorage.setItem("user",JSON.stringify(user))
-        this.color3_div.style.backgroundColor = this.color3_input.value;
-    })
-
-    this.color4_div.addEventListener("click",(e) => {
-        e.stopPropagation();
-        this.color4_input.click();
-    })
-    this.color4_input.addEventListener("input",() => {
-        user.colors.c_4 = this.color4_input.value;
-        localStorage.setItem("user",JSON.stringify(user))
-        this.color4_div.style.backgroundColor = this.color4_input.value;
-    })
-
-    this.save.addEventListener("click",() => {
-        let data = ChengeElements(admin_users_data,user.id,"id",user.colors,"colors");
-        socket.emit("data_save","admin_users",JSON.stringify(data));
-        open(location.href);
-        
-    })
+   
 }
 Tem.prototype.Crate = function() {
     paszamine_s.innerHTML = "";
     paszamine_s.appendChild(this.paszamine);
-    this.paszamine.appendChild(this.color1_input);
-    this.paszamine.appendChild(this.color1_div);
-
-    this.paszamine.appendChild(this.color2_input);
-    this.paszamine.appendChild(this.color2_div);
-
-    this.paszamine.appendChild(this.color3_input);
-    this.paszamine.appendChild(this.color3_div);
-
-    this.paszamine.appendChild(this.color4_input);
-    this.paszamine.appendChild(this.color4_div);
-
-    this.paszamine.appendChild(this.save);
+    this.paszamine.appendChild(this.paszamine_colors);
+    this.colors.forEach(e => {
+        this.paszamine_colors.appendChild(e.paszamine);
+    })
+    this.fonts.forEach(e => {
+        this.paszamine_fonts.appendChild(e.paszamine);
+    })
+    this.paszamine.appendChild(this.paszamine_fonts);
+    
 
 }
 

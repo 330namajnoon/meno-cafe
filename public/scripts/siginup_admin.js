@@ -4,6 +4,29 @@ import {colors} from "./admin.js";
 let user;
 let lisens;
 let users_data = []
+let style = {
+    fonts: [
+        {name: "Bebas Neue",font: "font-family: 'Bebas Neue', cursive;"},
+        {name: "Dancing Script",font: "font-family: 'Dancing Script', cursive;"},
+        {name: "Dosis",font: "font-family: 'Dosis', sans-serif;"},
+        {name:"Libre Baskerville",font:"font-family: 'Libre Baskerville', serif;"},
+        {name:"Lora",font: "font-family: 'Lora', serif;"},
+        {name:"Merriweather",font:"font-family: 'Merriweather', serif;"},
+        {name:"Oswald",font:"font-family: 'Oswald', sans-serif;"},
+        {name:"Playfair Display",font:"font-family: 'Playfair Display', serif;"},
+        {name:"Qwitcher Grypen",font:"font-family: 'Qwitcher Grypen', cursive;"},
+        {name:"Roboto Slab",font:"font-family: 'Roboto Slab', serif;"}
+    ],
+    colorss: [
+        {c_1: "#1C6758",c_2:"#3D8361",c_3:"#D6CDA4",c_4:"#EEF2E6"},
+        {c_1: "#7FBCD2",c_2:"#A5F1E9",c_3:"#E1FFEE",c_4:"#FFEEAF"},
+        {c_1: "#F7ECDE",c_2:"#E9DAC1",c_3:"#9ED2C6",c_4:"#54BAB9"},
+        {c_1: "#898AA6",c_2:"#C9BBCF",c_3:"#B7D3DF",c_4:"#D6EFED"},
+        {c_1: "#850E35",c_2:"#EE6983",c_3:"#FFC4C4",c_4:"#FFF5E4"},
+        {c_1: "#937DC2",c_2:"#C689C6",c_3:"#E8A0BF",c_4:"#FCC5C0"}
+    ]
+}
+
 socket.emit("data_load","admin_users");
 socket.on("data_load",(database,data)=> {
     if (database == "admin_users") {
@@ -23,39 +46,44 @@ function ObjectSerch(object,string,element) {
 let sigin,login;
 function Sigin() {
     this.styles = {
-        s1: "border-radius: 3vw;margin-top: 5vw;width: 100%;height: 10vw;background-color: "+colors.c_4+"; border: solid .5vw "+colors.c_3+"; color: "+colors.c_1+";font-size: 5vw;"
+        s1: "text-align: center;border-radius: 3vw;margin-top: 5vw;width: 100%;height: 10vw;background-color: "+colors.c_4+"; border: solid .5vw "+colors.c_3+"; color: "+colors.c_1+";font-size: 5vw;"
     }
     this.eror = document.createElement("h1");
-    this.eror.innerHTML = "lutfen hepsini doldurun";
-    this.eror.style.cssText = "display: none;font-size: 6vw;color: red;";
+    this.eror.innerHTML = "por favor complete todos los datos correctamente";
+    this.eror.style.cssText = "display: none;font-size: 4vw;color: red;";
     this.paszamine = document.createElement("div");
     this.paszamine.style.cssText = "text-align: center;width: 100%;height: "+innerHeight+"px;background-color: "+colors.c_2+";";
     this.paszamine_s = document.createElement("div");
-    this.paszamine_s.style.cssText = "text-align: center;position: absolute;margin-top: 20%;margin-left: 10%;width: 80%;height: auto;";
+    this.paszamine_s.style.cssText = "text-align: center;position: absolute;margin-top: 1%;margin-left: 10%;width: 80%;height: auto;";
+    this.marca = document.createElement("input");
+    this.marca.style.cssText = this.styles.s1;
+    this.marca.type = "text";
+    this.marca.setAttribute("placeholder","marca ...");
+    this.marca.setAttribute("maxlength","15");
     this.name = document.createElement("input");
     this.name.style.cssText = this.styles.s1;
     this.name.type = "text";
-    this.name.setAttribute("placeholder","name ...");
+    this.name.setAttribute("placeholder","nombre ...");
     this.lastname = document.createElement("input");
     this.lastname.style.cssText = this.styles.s1;
     this.lastname.type = "text";
-    this.lastname.setAttribute("placeholder","last name ...");
+    this.lastname.setAttribute("placeholder","apellido ...");
     this.imail = document.createElement("input");
     this.imail.style.cssText = this.styles.s1;
     this.imail.type = "text";
-    this.imail.setAttribute("placeholder","imail ...");
+    this.imail.setAttribute("placeholder","correo electronico ...");
     this.sifre = document.createElement("input");
     this.sifre.style.cssText = this.styles.s1;
     this.sifre.type = "password";
-    this.sifre.setAttribute("placeholder","password ...");
+    this.sifre.setAttribute("placeholder","contaseña ...");
     this.sifre_s = document.createElement("input");
     this.sifre_s.style.cssText = this.styles.s1;
     this.sifre_s.type = "password";
-    this.sifre_s.setAttribute("placeholder","repeat the password ...");
+    this.sifre_s.setAttribute("placeholder","repita la controseña ...");
     this.lisens = document.createElement("input");
     this.lisens.style.cssText = this.styles.s1;
     this.lisens.type = "text";
-    this.lisens.setAttribute("placeholder","lisens ...");
+    this.lisens.setAttribute("placeholder","lisans ...");
     this.save = document.createElement("input");
     this.save.style.cssText = this.styles.s1+";height: 15vw;font-size: 7vw;width: 90%;margin-left: 5%;margin-top: 8vw";
     this.save.type = "button";
@@ -71,8 +99,8 @@ function Sigin() {
     this.Crate();
     this.save.addEventListener("click",(e)=> {
         e.stopPropagation();
-        if (this.name.value != "" && this.lastname.value != "" && this.imail.value != "" && this.lisens.value != "" &&this.sifre.value != ""&& this.sifre_s.value != "" && this.sifre.value == this.sifre_s.value) {
-            user = {id: ID_ara(users_data),name: this.name.value,lastname: this.lastname.value,imail: this.imail.value,password: this.sifre.value,lisens: this.lisens.value,colors:{c_1: "#906A50",c_2: "#E5B480",c_3: "#4DDDE0",c_4: "#ADEBF0"}};
+        if (this.marca.value != ""&&this.name.value != "" && this.lastname.value != "" && this.imail.value != "" && this.lisens.value != "" &&this.sifre.value != ""&& this.sifre_s.value != "" && this.sifre.value == this.sifre_s.value) {
+            user = {id: ID_ara(users_data),marca: this.marca.value,name: this.name.value,lastname: this.lastname.value,imail: this.imail.value,password: this.sifre.value,lisens: this.lisens.value,colors:style.colorss[0],fonts: style.fonts[0]};
             socket.emit("data_load","lisens");
             socket.on("data_load",(database,data)=> {
                 lisens = JSON.parse(data);
@@ -87,6 +115,7 @@ Sigin.prototype.Crate = function() {
     document.getElementById("body").appendChild(this.paszamine);
     this.paszamine.appendChild(this.paszamine_s);
     this.paszamine_s.appendChild(this.eror);
+    this.paszamine_s.appendChild(this.marca);
     this.paszamine_s.appendChild(this.name);
     this.paszamine_s.appendChild(this.lastname);
     this.paszamine_s.appendChild(this.imail);
@@ -118,10 +147,10 @@ function userSave(data) {
 
 function Login() {
     this.styles = {
-        s1: "border-radius: 3vw;margin-top: 5vw;width: 100%;height: 10vw;background-color: "+colors.c_4+"; border: solid .5vw "+colors.c_3+"; color: "+colors.c_1+";font-size: 5vw;"
+        s1: "text-align: center;border-radius: 3vw;margin-top: 5vw;width: 100%;height: 10vw;background-color: "+colors.c_4+"; border: solid .5vw "+colors.c_3+"; color: "+colors.c_1+";font-size: 5vw;"
     }
     this.eror = document.createElement("h1");
-    this.eror.innerHTML = "lutfen hepsini doldurun";
+    this.eror.innerHTML = "por favor complete todos los datos correctamente";
     this.eror.style.cssText = "display: none;font-size: 6vw;color: red;";
     this.paszamine = document.createElement("div");
     this.paszamine.style.cssText = "text-align: center;width: 100%;height: "+innerHeight+"px;background-color: "+colors.c_2+";";
@@ -130,11 +159,11 @@ function Login() {
     this.imail = document.createElement("input");
     this.imail.style.cssText = this.styles.s1;
     this.imail.type = "text";
-    this.imail.setAttribute("placeholder","imail ...");
+    this.imail.setAttribute("placeholder","correo electronico ...");
     this.sifre = document.createElement("input");
     this.sifre.style.cssText = this.styles.s1;
     this.sifre.type = "password";
-    this.sifre.setAttribute("placeholder","password ...");
+    this.sifre.setAttribute("placeholder","contraseña ...");
    
     this.save = document.createElement("input");
     this.save.style.cssText = this.styles.s1+";height: 15vw;font-size: 7vw;width: 90%;margin-left: 5%;margin-top: 8vw";

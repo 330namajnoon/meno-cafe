@@ -1,1 +1,0 @@
-[{"id":1,"meno_name":"cafe con leche","img":"populer-kahveler.jpg"},{"id":2,"meno_name":"icecekler","img":"tadal-pastanesi.jpg"}]

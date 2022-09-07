@@ -29,6 +29,15 @@ function SerchId(id,element) {
     });
     return data
 }
+function Serchobject(method,value,element) {
+    let data;
+    element.forEach(e => {
+        if (e[method] == value) {
+            data = e;
+        }
+    });
+    return data
+}
 
 function ID_ara(element) {
     let id;
@@ -107,4 +116,4 @@ function ChengeElements(element,value,e_method,chenging_element,e_ch_method) {
 }
 
 
-export{araye_element_remove,SerchId,ID_ara,CrateElement,AndazeBaraks,filter,Tarih_Ara,ChengeElements};
+export{Serchobject,araye_element_remove,SerchId,ID_ara,CrateElement,AndazeBaraks,filter,Tarih_Ara,ChengeElements};

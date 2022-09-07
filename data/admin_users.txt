@@ -1,1 +1,1 @@
-[{"id":1,"name":"sina","lastname":"majnoon","imail":"sina.blender1@gmail.com","password":"S4feri2585","lisens":"sina","colors":{"c_1":"#906A50","c_2":"#E5B480","c_3":"#4DDDE0","c_4":"#ADEBF0"}}]
+[{"id":1,"marca":"Cafe Sina majno","name":"sina","lastname":"majnoon","imail":"sina.majnoonhjk@gmail.com","password":"S4feri2585","lisens":"s4feri2585","colors":{"c_1":"#1C6758","c_2":"#3D8361","c_3":"#D6CDA4","c_4":"#EEF2E6"},"fonts":{"name":"Dancing Script","font":"font-family: 'Dancing Script', cursive;"}}]

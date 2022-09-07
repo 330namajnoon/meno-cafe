@@ -1,0 +1,1 @@
+[{"id":1,"meno_name":"cafe con leche","img":"frappe-600x740.jpg","aciklama":"con azucar","fiyat":"3.5","meno_id":"1"}]

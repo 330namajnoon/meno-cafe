@@ -1,1 +1,0 @@
-[{"id":1,"meno_name":"kahveler","img":"tadal-pastanesi.jpg"},{"id":2,"meno_name":"pastalar","img":"tadal-pastanesi.jpg"},{"id":3,"meno_name":"soguk icecekler","img":"sogukicecek.webp"},{"id":4,"meno_name":"111","img":"soguk-icecekler.webp"}]

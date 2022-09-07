@@ -9,7 +9,7 @@ import {araye_element_remove,SerchId,ID_ara,CrateElement,AndazeBaraks,filter,Tar
 //   elements    //
 ///////////////////
 ///////////////////
-let admin,masa_no,colors,paszamine,menolar,urunler,siparis_ekle,sabad,login,username;
+let marca,admin,masa_no,colors,font,paszamine,menolar,urunler,siparis_ekle,sabad,login,username;
 ///////////////////
 ///////////////////
 //   data load   //
@@ -36,6 +36,8 @@ socket.on("data_load",(database,data) => {
                 admin = element.imail+element.lisens;
                 masa_no = u_m[0];
                 colors = element.colors;
+                font = element.fonts.font;
+                marca = element.marca;
                 if(localStorage.getItem("username") !== null ) {
                 paszamine = new Paszamine();
                 socket.emit("data_load",""+admin+"menolar");
@@ -133,11 +135,13 @@ socket.on("data_save_s",(database,data) => {
 
 function Paszamine() {
     this.styles = {
-        paszamine: "width: "+innerWidth+"px;height: "+innerHeight+"px;float: left;",
-        sartitr: "width: 100%;height: 20vw;background: "+colors.c_1+";float: left;",
+        paszamine: ""+font+"width: "+innerWidth+"px;height: "+innerHeight+"px;float: left;",
+        sartitr: "text-align: center;width: 100%;height: 20vw;background: "+colors.c_1+";float: left;",
         paszamine_s: "width: 100%;height: 100%;background: "+colors.c_2+";float: left;",
         spans: "font-size: 15vw;float: left;margin-top: 2vw;margin-left: 2%;color: "+colors.c_4+";",
-        sabad_adad: "position: absolute;font-size: 6vw;top: 3.5vw;left: 89%;color: "+colors.c_1+";margin:0;display: none"
+        sabad_adad: "position: absolute;font-size: 6vw;top: 3.5vw;left: 89%;color: "+colors.c_1+";margin:0;display: none",
+        marca: "position: absolute;font-size: 10vw;color: "+colors.c_4+";margin: 0"
+
     }
     this.paszamine = CrateElement("div");
     this.paszamine.style.cssText = this.styles.paszamine;
@@ -152,8 +156,13 @@ function Paszamine() {
     this.sabad_adet = CrateElement("h1","0");
     this.sabad_adet.style.cssText = this.styles.sabad_adad;
 
+    this.marca = CrateElement("h1",marca);
+    this.marca.style.cssText = this.styles.marca;
+
 
     this.Crate();
+    this.marca.style.left = (innerWidth/2)-(this.marca.getBoundingClientRect().width/2)+"px";
+    this.marca.style.top = (this.sartitr.getBoundingClientRect().height/2)-(this.marca.getBoundingClientRect().height/2)+"px";
 
     this.home_span.addEventListener("click",(e) => {
         e.stopPropagation();
@@ -173,6 +182,7 @@ Paszamine.prototype.Crate = function() {
     this.paszamine.appendChild(this.sartitr);
     this.paszamine.appendChild(this.paszamine_s);
     this.sartitr.appendChild(this.home_span);
+    this.sartitr.appendChild(this.marca);
     this.sartitr.appendChild(this.sabad_span);
     this.sartitr.appendChild(this.sabad_adet);
 }
@@ -192,6 +202,7 @@ function Menolar() {
         this.img = CrateElement("img","","meno_img");
         this.img.src = "./images/"+img_;
         this.h1_div = CrateElement("div","","meno_h1_div");
+        this.h1_div.style.backgroundColor = colors.c_1+"84";
         this.h1 = CrateElement("h1",name_,"meno_h1");
         this.h1.style.color = colors.c_3;
         this.paszamine.appendChild(this.img);
@@ -246,14 +257,17 @@ function Urunler() {
         ///// urun adi
         
         this.h1_div = CrateElement("div","","meno_h1_div");
+        this.h1_div.style.backgroundColor = colors.c_1+"84";
         this.h1 = CrateElement("h1",name_,"meno_h1");
         this.h1.style.color = colors.c_3;
         ///// urun aciklama
         this.h1_div_aciklama = CrateElement("div","","meno_h1_div");
+        this.h1_div_aciklama.style.backgroundColor = colors.c_1+"84";
         this.h1_aciklama = CrateElement("h1",aciklama_,"meno_h1");
         this.h1_aciklama.style.color = colors.c_3;
         ///// urun fiyat
         this.h1_div_fiyat = CrateElement("div","","meno_h1_div");
+        this.h1_div_fiyat.style.backgroundColor = colors.c_1+"84";
         this.h1_fiyat = CrateElement("h1",""+fiyat_+" $","meno_h1");
         this.h1_fiyat.style.color = colors.c_3;
     
