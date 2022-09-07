@@ -3,6 +3,7 @@ import {paszamine_s,me} from "./admin.js";
 //////////////////////
 //   menolar        //
 //////////////////////
+
 function MenoEkle () {
     this.ekle_icon = CrateElement("span","add_circle","","material-symbols-rounded");
     this.ekle_icon.style.cssText = "top: 2%;position: absolute;font-size: "+AndazeBaraks(15,15)+"px;color: "+colors.c_4+"";
