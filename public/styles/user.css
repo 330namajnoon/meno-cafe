@@ -5,16 +5,8 @@ body {
 }
 
 #test {
-   width: 100%;height: 100%;float: left;position: relative;
-   float: left;font-size: 15vw;color: aliceblue;
-   float: left;width: 100%;height: 100%;position: absolute;top: 0;left: 0;object-fit: cover;filter: blur(2vw);
-   position: relative;width: 100%;height: auto;font-size: 10vw;background-color: antiquewhite;color: aqua;border: solid .5vw red;float: left;margin-top: 10vw;text-align: center;
-   position: relative;width: 20vw;height: 20vw;font-size: 10vw;padding: 2vw;border-radius: 20vw;border: solid .5vw rebeccapurple;background-color: aliceblue;
-   position: absolute;font-size: 5vw;top: 0;left: 0;color: aliceblue;
-   overflow-y: auto;
-   text-align: center;
-   font-size: 6vw;color: aliceblue;text-align: center;position: absolute;position: relative;
-   border-bottom: solid .5vw rebeccapurple;border-right: 0ch;
+  padding: 2vw;width: 30vw;font-size: 8vw;border: solid .5vw rgba(71, 68, 68, 0.727);float: left;
+  float: left;width: 20vw;
 }
 
 #meno_div {

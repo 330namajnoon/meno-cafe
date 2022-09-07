@@ -43,7 +43,7 @@ socket.on("data_load",(database,data) => {
                 socket.emit("data_load",""+admin+"menolar");
                 socket.emit("data_load",""+admin+"siparisler");
                 let username_ = JSON.parse(localStorage.getItem("username"));
-                username = username_.username;
+                username = username_.user_name;
                 }else {
                     login = new Login();
                 }
@@ -161,6 +161,18 @@ function Paszamine() {
 
 
     this.Crate();
+    if(this.marca.getBoundingClientRect().width > innerWidth/1.4) {
+
+        let val1 = innerWidth/1.6;
+        let val2 = this.marca.getBoundingClientRect().width;
+        let val3 = val2 / val1;
+        let val4 = this.marca.style.fontSize;
+        let val5 = Number(val4.replace("vw",""));
+        let val6 = val5 / val3;
+
+        this.marca.style.fontSize = val6+"vw";
+        
+   }
     this.marca.style.left = (innerWidth/2)-(this.marca.getBoundingClientRect().width/2)+"px";
     this.marca.style.top = (this.sartitr.getBoundingClientRect().height/2)-(this.marca.getBoundingClientRect().height/2)+"px";
 

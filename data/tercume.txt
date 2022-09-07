@@ -1,0 +1,1 @@
+{"turkce":{"isyeri":"isyeri","ad":"ad","soyad":"soyad","meil":"meil","sifre":"sifre","tekrarsifre":"tekrar sifre","lisans":"lisans"}}

@@ -1,1 +1,1 @@
-[{"id":1,"meno_name":"cafes","img":"populer-kahveler.jpg"}]
+[{"id":1,"meno_name":"cafe","img":"populer-kahveler.jpg"}]

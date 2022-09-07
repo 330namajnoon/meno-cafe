@@ -27,6 +27,7 @@ let qrcods_data = [];
 let kasa_data = [];
 let users_data = [{id:1,user_name: "sina",imail: "sina.majnoonhjk@gmail.com"}];
 let siparisler_data = [{id:1,urun_adi: "cafe con leche",aciklama: "sekersiz",fiyat: 10,adet: 2,masa_no: "masa1"}];
+let tercume_data = [];
 
 socket.on("data_load_s",(database,data) => {
     if (database == ""+user.imail+user.lisens+"siparisler") {
@@ -36,18 +37,27 @@ socket.on("data_load_s",(database,data) => {
     }
 })
 if (user !== null && sessionStorage.getItem("user") !== "") {
+    socket.emit("data_load","tercume");
+
     font = user.fonts.font;
     colors = user.colors;
-    socket.emit("data_load","admin_users");
-    socket.emit("data_load","style");
-    socket.emit("data_load",""+user.imail+user.lisens+"siparisler");
+   
 }
 socket.on("data_load",(database,data)=> {
     if (database == "style") {
         if(data != "") {
             styles_data = JSON.parse(data);
-            console.log(styles_data);
         }
+    }
+    if (database == "tercume") {
+        if(data != "") {
+            tercume_data = JSON.parse(data);
+        }
+        socket.emit("data_load","admin_users");
+        socket.emit("data_load","style");
+        socket.emit("data_load",""+user.imail+user.lisens+"siparisler");
+        console.log(tercume_data)
+       
     }
     if (database == ""+user.imail+user.lisens+"menolar") {
         if(data != "") {
@@ -190,19 +200,33 @@ navarabzar = new NavarAbzar();
 function Marca(marca) {
    this.value = marca; 
    this.styles = {
-    paszamine: "border: solid .9vw "+colors.c_4+";"+font+"text-align: center;left:"+navarabzar.paszamine.getBoundingClientRect().width+"px;top:0;position: absolute;float: left;width: "+((innerWidth-filter(navarabzar.paszamine.style.width))*.963)+"px;height: auto;background-color: "+colors.c_1+";color: "+colors.c_4+";font-size:10vw;padding-top:5vw;padding-bottom:5vw"
+    paszamine: "border: solid .9vw "+colors.c_4+";"+font+"text-align: center;left:"+navarabzar.paszamine.getBoundingClientRect().width+"px;top:0;position: absolute;float: left;width: "+((innerWidth-filter(navarabzar.paszamine.style.width))*.963)+"px;height: auto;background-color: "+colors.c_1+";color: "+colors.c_4+";font-size:10vw;padding-top:5vw;padding-bottom:5vw",
+    marca: "position: absolute;font-size: 10vw;color: "+colors.c_4+";margin: 0;"
    }
+   this.marca = CrateElement("h1",marca);
+   this.marca.style.cssText = this.styles.marca;
    this.paszamine = CrateElement("input","","","","text");
    this.paszamine.style.cssText = this.styles.paszamine;
    this.paszamine.value = this.value;
    this.paszamine.setAttribute("maxlength","15");
    this.Crate();
+   if(this.marca.getBoundingClientRect().width > innerWidth/1.5) {
+
+        let val1 = innerWidth/1.5;
+        let val2 = this.marca.getBoundingClientRect().width;
+        let val3 = val2 / val1;
+        let val4 = this.paszamine.style.fontSize;
+        let val5 = Number(val4.replace("vw",""));
+        let val6 = val5 / val3;
+
+        this.paszamine.style.fontSize = val6+"vw";
+        
+   }
   
 }
 Marca.prototype.Crate = function() {
     document.getElementById("body").appendChild(this.paszamine);
-   
-    
+    document.getElementById("body").appendChild(this.marca);
 }
 window.addEventListener("click",() => {
     if(marca.paszamine.value !== user.marca) {
@@ -1275,6 +1299,8 @@ function Tem() {
     styles_data.fonts.forEach(e => {
         this.fonts.push(new Fonts(e));
     })
+
+    this.Crate();
    
 }
 Tem.prototype.Crate = function() {
