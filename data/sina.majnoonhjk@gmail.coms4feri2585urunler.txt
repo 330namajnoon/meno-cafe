@@ -1,1 +1,1 @@
-[{"id":1,"meno_name":"cafeeee","img":"frappe-600x740.jpg","aciklama":"con azucar","fiyat":"3.5","meno_id":"1"}]
+[{"id":1,"meno_name":"cafe turco","img":"beneficios-del-cafe-en-grano_.jpg","aciklama":"con azucar","fiyat":"3.70","meno_id":"1"}]

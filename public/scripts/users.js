@@ -280,7 +280,7 @@ function Urunler() {
         ///// urun fiyat
         this.h1_div_fiyat = CrateElement("div","","meno_h1_div");
         this.h1_div_fiyat.style.backgroundColor = colors.c_1+"84";
-        this.h1_fiyat = CrateElement("h1",""+fiyat_+" $","meno_h1");
+        this.h1_fiyat = CrateElement("h1",""+fiyat_+" €","meno_h1");
         this.h1_fiyat.style.color = colors.c_3;
     
         this.paszamine.appendChild(this.img);

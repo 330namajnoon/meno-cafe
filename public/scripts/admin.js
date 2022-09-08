@@ -56,7 +56,6 @@ socket.on("data_load",(database,data)=> {
         socket.emit("data_load","admin_users");
         socket.emit("data_load","style");
         socket.emit("data_load",""+user.imail+user.lisens+"siparisler");
-        console.log(tercume_data)
        
     }
     if (database == ""+user.imail+user.lisens+"menolar") {
@@ -256,7 +255,7 @@ function MenoEkle () {
     this.m_add_paszamine_s.style.cssText = "position: relative;float: left;width: 90%;height: 40vw;background-color: #adebf000;margin-left: 5%;margin-top: 20%;",
     this.text = CrateElement("input","","m_add_text","","text");
     this.text.style.cssText = " position: absolute;font-size: 5vw;width: 98%;height: 12vw;border: solid .5vw "+colors.c_4+";padding: .2vw;background-color: "+colors.c_1+";color: "+colors.c_3+";top: 14vw;";
-    this.text.setAttribute("placeholder","Meno Name:........");
+    this.text.setAttribute("placeholder","Nombre del meno ....");
     this.text.setAttribute("maxlength","20");
     this.file = CrateElement("input","","add_meno_file","","file");
     this.lable = CrateElement("lable","","m_add_lable");
@@ -267,7 +266,7 @@ function MenoEkle () {
     this.icon = CrateElement("span","add_photo_alternate","m_add_icon","material-symbols-rounded");
     this.icon.style.cssText = "position: absolute;font-size: 12vw;color: "+colors.c_4+";margin-left: 40%;";
     this.button = CrateElement("input","","m_add_button","","button");
-    this.button.value = "save";
+    this.button.value = "Guerda";
     this.button.style.cssText = " position: absolute;width: 100%;height: 13vw;background-color: "+colors.c_1+";color: "+colors.c_4+";font-size: 6vw;border: solid .5vw "+colors.c_4+";top: 30vw;";
     
     this.Crate();
@@ -382,13 +381,13 @@ function Menoedit (data) {
     this.m_add_paszamine_s.style.cssText = "position: relative;float: left;width: 90%;height: auto;background-color: #adebf000;margin-left: 5%;margin-top: 20%;",
 
     this.delete = CrateElement("input","","delete","","button");
-    this.delete.value = "Delete";
+    this.delete.value = "Borra";
     this.delete.style.cssText = " z-index: 1;margin-top: -30%;position: absolute;width: 50%;margin-left: 25%;height: 10vw;background-color: "+colors.c_4+";border: solid 0 ;color: "+colors.c_1+"";
     ////// urun adi
     this.text = CrateElement("input","","m_add_text","","text");
     this.text.value = data.meno_name;
     this.text.style.cssText = "font-size: 5vw;width: 98%;height: 12vw;border: solid .5vw "+colors.c_4+";padding: .2vw;background-color: "+colors.c_1+";color: "+colors.c_3+";margin-top: 14vw;";
-    this.text.setAttribute("placeholder","Prodoct Name:........");
+    this.text.setAttribute("placeholder","Nombre del meno ...");
     this.text.setAttribute("maxlength","20");
 
     this.file = CrateElement("input","","add_meno_file","","file");
@@ -400,7 +399,7 @@ function Menoedit (data) {
     this.icon = CrateElement("span","add_photo_alternate","m_add_icon","material-symbols-rounded");
     this.icon.style.cssText = "position:absolute;font-size: 12vw;color: "+colors.c_4+";margin-left: 40%;";
     this.button = CrateElement("input","","m_add_button","","button");
-    this.button.value = "save";
+    this.button.value = "Guarda";
     this.button.style.cssText = "width: 100%;height: 13vw;background-color: "+colors.c_1+";color: "+colors.c_4+";font-size: 6vw;border: solid .5vw "+colors.c_4+";margin-top: 1vw;";
     
     this.Crate();
@@ -482,16 +481,16 @@ function UrunEkle () {
     ////// urun adi
     this.text = CrateElement("input","","m_add_text","","text");
     this.text.style.cssText = "font-size: 5vw;width: 98%;height: 12vw;border: solid .5vw "+colors.c_4+";padding: .2vw;background-color: "+colors.c_1+";color: "+colors.c_3+";margin-top: 14vw;";
-    this.text.setAttribute("placeholder","Prodoct Name:........");
+    this.text.setAttribute("placeholder","Nombre del pedido.....");
     this.text.setAttribute("maxlength","20");
     ///// urun aciklama
     this.text_aciklama = CrateElement("input","","m_add_text","","text");
     this.text_aciklama.style.cssText = "font-size: 5vw;width: 98%;height: 12vw;border: solid .5vw "+colors.c_4+";padding: .2vw;background-color: "+colors.c_1+";color: "+colors.c_3+";margin-top: 1vw;";
-    this.text_aciklama.setAttribute("placeholder","Prodoct Description:.....");
+    this.text_aciklama.setAttribute("placeholder","Explicacion ....");
     ///// urun fiyat
     this.text_fiyat = CrateElement("input","","m_add_text","","text");
     this.text_fiyat.style.cssText = "font-size: 5vw;width: 98%;height: 12vw;border: solid .5vw "+colors.c_4+";padding: .2vw;background-color: "+colors.c_1+";color: "+colors.c_3+";margin-top: 1vw;";
-    this.text_fiyat.setAttribute("placeholder","Price of the ptodoct:..");
+    this.text_fiyat.setAttribute("placeholder","Pricio ..");
 
     this.file = CrateElement("input","","add_meno_file","","file");
     this.lable = CrateElement("lable","","m_add_lable");
@@ -502,7 +501,7 @@ function UrunEkle () {
     this.icon = CrateElement("span","add_photo_alternate","m_add_icon","material-symbols-rounded");
     this.icon.style.cssText = "position: absolute;font-size: 12vw;color: "+colors.c_4+";margin-left: 40%;";
     this.button = CrateElement("input","","m_add_button","","button");
-    this.button.value = "save";
+    this.button.value = "Guarda";
     this.button.style.cssText = "width: 100%;height: 13vw;background-color: "+colors.c_1+";color: "+colors.c_4+";font-size: 6vw;border: solid .5vw "+colors.c_4+";margin-top: 1vw;";
     
     this.Crate();
@@ -590,7 +589,7 @@ function Urun(id_,name_,img_,aciklama_,fiyat_,meno_id_) {
     ///// urun fiyat
     this.h1_div_fiyat = CrateElement("div","","meno_h1_div");
     this.h1_div_fiyat.style.backgroundColor = colors.c_1+"84";
-    this.h1_fiyat = CrateElement("h1",""+fiyat_+" $","meno_h1");
+    this.h1_fiyat = CrateElement("h1",""+fiyat_+"  €","meno_h1");
     this.h1_fiyat.style.color = colors.c_3;
 
     this.paszamine.appendChild(this.img);
@@ -650,23 +649,23 @@ function Urunedit (data) {
 
     this.delete = CrateElement("input","","delete","","button");
     this.delete.style.cssText = " z-index: 1;margin-top: -30%;position: absolute;width: 50%;margin-left: 25%;height: 10vw;background-color: "+colors.c_4+";border: solid 0 ;color: "+colors.c_1+"";
-    this.delete.value = "Delete";
+    this.delete.value = "Borra";
     ////// urun adi
     this.text = CrateElement("input","","m_add_text","","text");
     this.text.value = data.meno_name;
     this.text.style.cssText = "font-size: 5vw;width: 98%;height: 12vw;border: solid .5vw "+colors.c_4+";padding: .2vw;background-color: "+colors.c_1+";color: "+colors.c_3+";margin-top: 14vw;";
-    this.text.setAttribute("placeholder","Prodoct Name:........");
+    this.text.setAttribute("placeholder","Prodoct Nembre del prodocto ...");
     this.text.setAttribute("maxlength","20");
     ///// urun aciklama
     this.text_aciklama = CrateElement("input","","m_add_text","","text");
     this.text_aciklama.value = data.aciklama;
     this.text_aciklama.style.cssText = "font-size: 5vw;width: 98%;height: 12vw;border: solid .5vw "+colors.c_4+";padding: .2vw;background-color: "+colors.c_1+";color: "+colors.c_3+";margin-top: 1vw;";
-    this.text_aciklama.setAttribute("placeholder","Prodoct Description:.....");
+    this.text_aciklama.setAttribute("placeholder","Explicacion...");
     ///// urun fiyat
     this.text_fiyat = CrateElement("input","","m_add_text","","text");
     this.text_fiyat.value = data.fiyat;
     this.text_fiyat.style.cssText = "font-size: 5vw;width: 98%;height: 12vw;border: solid .5vw "+colors.c_4+";padding: .2vw;background-color: "+colors.c_1+";color: "+colors.c_3+";margin-top: 1vw;";
-    this.text_fiyat.setAttribute("placeholder","Price of the ptodoct:..");
+    this.text_fiyat.setAttribute("placeholder","Precio ..");
 
     this.file = CrateElement("input","","add_meno_file","","file");
     this.lable = CrateElement("lable","","m_add_lable");
@@ -677,7 +676,7 @@ function Urunedit (data) {
     this.icon = CrateElement("span","add_photo_alternate","m_add_icon","material-symbols-rounded");
     this.icon.style.cssText = " position: absolute;font-size: 12vw;color: "+colors.c_4+";margin-left: 40%;";
     this.button = CrateElement("input","","m_add_button","","button");
-    this.button.value = "save";
+    this.button.value = "Guarda";
     this.button.style.cssText = "width: 100%;height: 13vw;background-color: "+colors.c_1+";color: "+colors.c_4+";font-size: 6vw;border: solid .5vw "+colors.c_4+";margin-top: 1vw;";
     
     this.Crate();
@@ -787,11 +786,11 @@ function QrCodEkle() {
     this.m_add_paszamine_s.style.cssText = "position: relative;float: left;width: 90%;height: 40vw;background-color: #adebf000;margin-left: 5%;margin-top: 20%;",
     this.text = CrateElement("input","","m_add_text","","text");
     this.text.style.cssText = " position: absolute;font-size: 5vw;width: 98%;height: 12vw;border: solid .5vw "+colors.c_4+";padding: .2vw;background-color: "+colors.c_1+";color: "+colors.c_3+";top: 14vw;";
-    this.text.setAttribute("placeholder","name-no:........");
+    this.text.setAttribute("placeholder","Numero de mesa ..");
     this.text.setAttribute("maxlength","20");
 
     this.button = CrateElement("input","","m_add_button","","button");
-    this.button.value = "save";
+    this.button.value = "Guarda";
     this.button.style.cssText = " position: absolute;width: 100%;height: 13vw;background-color: "+colors.c_1+";color: "+colors.c_4+";font-size: 6vw;border: solid .5vw "+colors.c_4+";top: 30vw;";
 
     this.qr_paszamine = CrateElement("div");
@@ -846,7 +845,7 @@ function Siparisler() {
         this.sira_div = CrateElement("div");
         this.sira_div.style.cssText = "border-radius: 4vw 0vw 0 0;float: left;width: 28%;height: 10vw;border: solid .5vw "+colors.c_4+";background-color: "+colors.c_1+";";
         this.sira_h1 = CrateElement("h1");
-        this.sira_h1.innerHTML = "isim :";
+        this.sira_h1.innerHTML = "Nombre :";
         this.sira_h1.style.cssText = "margin-top: 2.5vw;font-size: 4vw;color: "+colors.c_4+";";
         //satir
         this.satir_div = CrateElement("div");
@@ -858,7 +857,7 @@ function Siparisler() {
         this.sira_div1 = CrateElement("div");
         this.sira_div1.style.cssText = "float: left;width: 28%;height: 10vw;border: solid .5vw "+colors.c_1+";background-color: "+colors.c_4+";";
         this.sira_h11 = CrateElement("h1");
-        this.sira_h11.innerHTML = "tarih :";
+        this.sira_h11.innerHTML = "Fecha :";
         this.sira_h11.style.cssText = "margin-top: 2.5vw;font-size: 4vw;color: "+colors.c_1+";";
         //satir
         this.satir_div1 = CrateElement("div");
@@ -870,7 +869,7 @@ function Siparisler() {
          this.sira_div2 = CrateElement("div");
          this.sira_div2.style.cssText = "float: left;width: 28%;height: 10vw;border: solid .5vw "+colors.c_1+";background-color: "+colors.c_4+";";
          this.sira_h12 = CrateElement("h1");
-         this.sira_h12.innerHTML = "siparis :";
+         this.sira_h12.innerHTML = "Pedido :";
          this.sira_h12.style.cssText = "margin-top: 2.5vw;font-size: 4vw;color: "+colors.c_1+";";
          //satir
          this.satir_div2 = CrateElement("div");
@@ -882,7 +881,7 @@ function Siparisler() {
          this.sira_div3 = CrateElement("div");
          this.sira_div3.style.cssText = "float: left;width: 28%;height: 10vw;border: solid .5vw "+colors.c_1+";background-color: "+colors.c_4+";";
          this.sira_h13 = CrateElement("h1");
-         this.sira_h13.innerHTML = "aciklama :";
+         this.sira_h13.innerHTML = "Explicacion :";
          this.sira_h13.style.cssText = "margin-top: 2.5vw;font-size: 4vw;color: "+colors.c_1+";";
          //satir
          this.satir_div3 = CrateElement("div");
@@ -894,19 +893,19 @@ function Siparisler() {
           this.sira_div4 = CrateElement("div");
           this.sira_div4.style.cssText = "float: left;width: 28%;height: 10vw;border: solid .5vw "+colors.c_1+";background-color: "+colors.c_4+";";
           this.sira_h14 = CrateElement("h1");
-          this.sira_h14.innerHTML = "fiyat :";
+          this.sira_h14.innerHTML = "Precio :";
           this.sira_h14.style.cssText = "margin-top: 2.5vw;font-size: 4vw;color: "+colors.c_1+";";
           //satir
           this.satir_div4 = CrateElement("div");
           this.satir_div4.style.cssText = "float: left;width: 69%;height: 10vw;border: solid .5vw "+colors.c_1+";background-color: "+colors.c_4+";";
           this.satir_h14 = CrateElement("h1");
-          this.satir_h14.innerHTML = this.data.fiyat+" $";
+          this.satir_h14.innerHTML = this.data.fiyat+"  €";
           this.satir_h14.style.cssText = "margin-top: 2.5vw;font-size: 5vw;color: "+colors.c_1+";";
            /////  adet sira
            this.sira_div5 = CrateElement("div");
            this.sira_div5.style.cssText = "float: left;width: 28%;height: 10vw;border: solid .5vw "+colors.c_1+";background-color: "+colors.c_4+";";
            this.sira_h15 = CrateElement("h1");
-           this.sira_h15.innerHTML = "adet :";
+           this.sira_h15.innerHTML = "Numero :";
            this.sira_h15.style.cssText = "margin-top: 2.5vw;font-size: 4vw;color: "+colors.c_1+";";
            //satir
            this.satir_div5 = CrateElement("div");
@@ -918,19 +917,19 @@ function Siparisler() {
             this.sira_div6 = CrateElement("div");
             this.sira_div6.style.cssText = "float: left;width: 28%;height: 10vw;border: solid .5vw "+colors.c_1+";background-color: "+colors.c_4+";";
             this.sira_h16 = CrateElement("h1");
-            this.sira_h16.innerHTML = "toplam :";
+            this.sira_h16.innerHTML = "Total :";
             this.sira_h16.style.cssText = "margin-top: 2.5vw;font-size: 4vw;color: "+colors.c_1+";";
             //satir
             this.satir_div6 = CrateElement("div");
             this.satir_div6.style.cssText = "float: left;width: 69%;height: 10vw;border: solid .5vw "+colors.c_1+";background-color: "+colors.c_4+";";
             this.satir_h16 = CrateElement("h1");
-            this.satir_h16.innerHTML = Number(this.data.adet)*Number(this.data.fiyat)+" $";
+            this.satir_h16.innerHTML = Number(this.data.adet)*Number(this.data.fiyat)+"  €";
             this.satir_h16.style.cssText = "margin-top: 2.5vw;font-size: 5vw;color: "+colors.c_1+";";
              /////  masa_no sira
              this.sira_div7 = CrateElement("div");
              this.sira_div7.style.cssText = "float: left;width: 28%;height: 10vw;border: solid .5vw "+colors.c_1+";background-color: "+colors.c_4+";";
              this.sira_h17 = CrateElement("h1");
-             this.sira_h17.innerHTML = "masa no :";
+             this.sira_h17.innerHTML = "Numero de mesa :";
              this.sira_h17.style.cssText = "margin-top: 2.5vw;font-size: 4vw;color: "+colors.c_1+";";
              //satir
              this.satir_div7 = CrateElement("div");
@@ -941,11 +940,11 @@ function Siparisler() {
 
              // buttons
              this.sil = CrateElement("input","","","","button");
-             this.sil.value = "sil";
+             this.sil.value = "Borra";
              this.sil.style.cssText = "font-size: 5vw;border-radius: 0vw 0vw 0 4vw;float: left;width: 30%;height: 10vw;border: solid 0vw "+colors.c_1+";background-color: "+colors.c_1+";color: "+colors.c_4+"";
 
              this.onayla = CrateElement("input","","","","button");
-             this.onayla.value = "onayla";
+             this.onayla.value = "Confirme";
              this.onayla.style.cssText = "font-size: 5vw;border-radius: 0vw 0vw 4vw 0vw;float: left;width: 69.5%;height: 10vw;border: solid .5vw "+colors.c_1+";background-color: "+colors.c_4+";color: "+colors.c_1+"";
         this.Crate();
 
@@ -1064,7 +1063,7 @@ function Users() {
     }
     this.paszamine = CrateElement("div");
     this.paszamine.style.cssText = "float: left;overflow-y: auto;width: 98%;height: 97%;text-align: center;";
-    this.users_adet = CrateElement("div",""+users_data.length+" kisi");
+    this.users_adet = CrateElement("div",""+users_data.length+" Personas");
     this.users_adet.style.cssText = "margin-bottom: 2vw;border-radius: 5vw; font-size: 7vw;background-color: "+colors.c_1+";color: "+colors.c_3+";width: 80%;margin-left: 10%;border-radius: 0 0 4vw 4vw;border: solid .5vw "+colors.c_4+";";
     this.users = [];
     this.shomar = users_data.length-1;
@@ -1099,7 +1098,7 @@ function kasa_(data) {
     this.siparis_s.style.cssText = this.styles.s2+";overflow-y: auto;";
     this.adet_s = CrateElement("div",""+this.data.adet+"");
     this.adet_s.style.cssText = this.styles.s2;
-    this.tutar_s = CrateElement("div",""+Number(this.data.adet)*Number(this.data.fiyat)+" $");
+    this.tutar_s = CrateElement("div",""+Number(this.data.adet)*Number(this.data.fiyat)+"  €");
     this.tutar_s.style.cssText = this.styles.s2;
     this.Crate();
 }
@@ -1124,13 +1123,13 @@ function Kasa() {
     
     this.paszamine = CrateElement("div");
     this.paszamine.style.cssText = "margin-top: 5vw;float: left;overflow-y: auto;width: 100%;height: 97%;text-align: center;";
-    this.tarih_s = CrateElement("div","Tarih");
+    this.tarih_s = CrateElement("div","Fecha");
     this.tarih_s.style.cssText = this.styles.s2+";border-radius: 3vw 0vw 0 0;";
-    this.siparis_s = CrateElement("div","Siparis");
+    this.siparis_s = CrateElement("div","Pedido");
     this.siparis_s.style.cssText = this.styles.s2;
-    this.adet_s = CrateElement("div","Adet");
+    this.adet_s = CrateElement("div","Numero");
     this.adet_s.style.cssText = this.styles.s2;
-    this.tutar_s = CrateElement("div","Tutar");
+    this.tutar_s = CrateElement("div","Monto");
     this.tutar_s.style.cssText = this.styles.s2+";border-radius: 0vw 3vw 0 0;";
     this.durum = 0;
     this.data = [];
@@ -1149,7 +1148,7 @@ function Kasa() {
         this.kasa.push(new kasa_(this.data[this.shomar]));
         this.shomar = this.shomar - 1;
     })
-    this.toplam_fiyati = CrateElement("div",""+this.shomar_fiyat+" $");
+    this.toplam_fiyati = CrateElement("div",""+this.shomar_fiyat+"  €");
     this.toplam_fiyati.style.cssText = this.styles.s2+";border-radius: 0vw 0vw 3vw 0;margin-left:75%";
     this.Crate();
     
@@ -1183,7 +1182,7 @@ Kasa.prototype.CrateBord = function() {
         this.kasa.push(new kasa_(this.data[this.shomar]));
         this.shomar = this.shomar - 1;
     })
-    this.toplam_fiyati.innerHTML = ""+this.shomar_fiyat+" $";
+    this.toplam_fiyati.innerHTML = ""+this.shomar_fiyat+"  €";
     
 
     this.kasa.forEach(e => {
@@ -1320,4 +1319,4 @@ Tem.prototype.Crate = function() {
 
 
 
-export{user,colors};
+export{user,colors,tercume_data};
