@@ -817,7 +817,7 @@ function QrCodEkle() {
     })
     this.button.addEventListener("click",(e) => {
         e.stopPropagation();
-        let url = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data="+location.origin+"/index.html?data="+this.text.value+"=="+user.imail+"";
+        let url = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://"+location.origin+"/index.html?data="+this.text.value+"=="+user.imail+"";
         qrcods_data.push({id: ID_ara(qrcods_data),name: this.text.value,url: url});
         socket.emit("data_save",""+user.imail+user.lisens+"qrcodes",JSON.stringify(qrcods_data));
     })
