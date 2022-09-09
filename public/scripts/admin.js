@@ -114,10 +114,15 @@ socket.on("data_load",(database,data,istek,data2) => {
 })
 socket.on("admin_siparis",() => {
     socket.emit("data_load",""+user.imail+user.lisens+"siparisler");
+   
 })
 socket.on("user_siparis", ()=> {
     socket.emit("data_load",""+user.imail+user.lisens+"siparisler");
+   
 })
+
+alert("sina");
+
 
 
 
@@ -150,6 +155,8 @@ function NavarAbzar() {
         icon.style.cssText = "font-size: "+AndazeBaraks(10,15)+"px;color: "+colors.c_4+";margin-left: 10%;margin-top: "+AndazeBaraks(2,5)+"px;margin-bottom: "+AndazeBaraks(5,10)+"px;";
         return icon;
     }
+   
+    
     this.paszamine = CrateElement("div");
     this.paszamine.style.cssText = "width: "+AndazeBaraks(15,20)+"px;height: 100%;background-color: "+colors.c_1+";"
     this.home = Abzar("home");
@@ -189,6 +196,8 @@ NavarAbzar.prototype.Crate = function() {
     this.paszamine.appendChild(this.kasa);
     this.paszamine.appendChild(this.qrcodes);
     this.paszamine.appendChild(this.edit);
+  
+    
 }
 navarabzar = new NavarAbzar();
 ///////////////////////
@@ -235,6 +244,7 @@ window.addEventListener("click",() => {
         socket.emit("data_save","admin_users",JSON.stringify(data));
         open(location.href);
     }
+    // navarabzar.elan.play();
 })
 marca = new Marca(user.marca);
 paszamine_s = CrateElement("div");

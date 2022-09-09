@@ -143,6 +143,7 @@ function Paszamine() {
         marca: "position: absolute;font-size: 10vw;color: "+colors.c_4+";margin: 0"
 
     }
+    
     this.paszamine = CrateElement("div");
     this.paszamine.style.cssText = this.styles.paszamine;
     this.sartitr = CrateElement("div");
