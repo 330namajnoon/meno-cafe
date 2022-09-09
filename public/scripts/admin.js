@@ -84,6 +84,12 @@ socket.on("data_load",(database,data)=> {
         paszamine_s.innerHTML = "";
         siparisler = new Siparisler();
     }
+    if (database == "style") {
+        if(data != "") {
+            styles_data = JSON.parse(data);
+        }
+        
+    }
     if (database == ""+user.imail+user.lisens+"users") {
         if(data != "") {
             users_data = JSON.parse(data);
