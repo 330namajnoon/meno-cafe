@@ -84,12 +84,6 @@ socket.on("data_load",(database,data)=> {
         paszamine_s.innerHTML = "";
         siparisler = new Siparisler();
     }
-    if (database == "style") {
-        if(data != "") {
-            styles_data = JSON.parse(data);
-        }
-        
-    }
     if (database == ""+user.imail+user.lisens+"users") {
         if(data != "") {
             users_data = JSON.parse(data);
@@ -1334,6 +1328,7 @@ if (user !== null && sessionStorage.getItem("user") !== "") {
     navarabzar = new NavarAbzar();
     marca = new Marca(user.marca);
     paszamine_s.style.cssText = ""+font+"position: absolute;width: "+(innerWidth-filter(navarabzar.paszamine.style.width))+"px;height: "+(innerHeight-marca.paszamine.getBoundingClientRect().height)+"px;left: "+filter(navarabzar.paszamine.style.width)+"px;top: "+marca.paszamine.getBoundingClientRect().height+"px;background-color: "+colors.c_2+";"
+    socket.emit("data_load","tercume");
 }
 
 
