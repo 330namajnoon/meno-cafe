@@ -36,13 +36,7 @@ socket.on("data_load_s",(database,data) => {
         }
     }
 })
-if (user !== null && sessionStorage.getItem("user") !== "") {
-    socket.emit("data_load","tercume");
 
-    font = user.fonts.font;
-    colors = user.colors;
-   
-}
 socket.on("data_load",(database,data)=> {
     if (database == "style") {
         if(data != "") {
@@ -53,10 +47,7 @@ socket.on("data_load",(database,data)=> {
         if(data != "") {
             tercume_data = JSON.parse(data);
         }
-        marca = new Marca(user.marca);
-        paszamine_s = CrateElement("div");
-        paszamine_s.style.cssText = ""+font+"position: absolute;width: "+(innerWidth-filter(navarabzar.paszamine.style.width))+"px;height: "+(innerHeight-marca.paszamine.getBoundingClientRect().height)+"px;left: "+filter(navarabzar.paszamine.style.width)+"px;top: "+marca.paszamine.getBoundingClientRect().height+"px;background-color: "+colors.c_2+";"
-        document.getElementById("body").appendChild(paszamine_s);
+       
         socket.emit("data_load","admin_users");
         socket.emit("data_load","style");
         socket.emit("data_load",""+user.imail+user.lisens+"siparisler");
@@ -203,7 +194,7 @@ NavarAbzar.prototype.Crate = function() {
   
     
 }
-navarabzar = new NavarAbzar();
+
 ///////////////////////
 ////////////////////////
 //paszamine sanaviye  //
@@ -1327,6 +1318,16 @@ Tem.prototype.Crate = function() {
     this.paszamine.appendChild(this.paszamine_fonts);
     
 
+}
+
+if (user !== null && sessionStorage.getItem("user") !== "") {
+    font = user.fonts.font;
+    colors = user.colors;
+    paszamine_s = CrateElement("div");
+    document.getElementById("body").appendChild(paszamine_s);
+    navarabzar = new NavarAbzar();
+    marca = new Marca(user.marca);
+    paszamine_s.style.cssText = ""+font+"position: absolute;width: "+(innerWidth-filter(navarabzar.paszamine.style.width))+"px;height: "+(innerHeight-marca.paszamine.getBoundingClientRect().height)+"px;left: "+filter(navarabzar.paszamine.style.width)+"px;top: "+marca.paszamine.getBoundingClientRect().height+"px;background-color: "+colors.c_2+";"
 }
 
 
