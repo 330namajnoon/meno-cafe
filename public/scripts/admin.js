@@ -125,7 +125,7 @@ socket.on("user_siparis", ()=> {
    
 })
 
-alert("sina");
+
 
 
 
