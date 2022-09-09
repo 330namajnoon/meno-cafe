@@ -53,6 +53,7 @@ socket.on("data_load",(database,data)=> {
         if(data != "") {
             tercume_data = JSON.parse(data);
         }
+        marca = new Marca(user.marca);
         socket.emit("data_load","admin_users");
         socket.emit("data_load","style");
         socket.emit("data_load",""+user.imail+user.lisens+"siparisler");
@@ -246,7 +247,7 @@ window.addEventListener("click",() => {
     }
     // navarabzar.elan.play();
 })
-marca = new Marca(user.marca);
+
 paszamine_s = CrateElement("div");
 paszamine_s.style.cssText = ""+font+"position: absolute;width: "+(innerWidth-filter(navarabzar.paszamine.style.width))+"px;height: "+(innerHeight-marca.paszamine.getBoundingClientRect().height)+"px;left: "+filter(navarabzar.paszamine.style.width)+"px;top: "+marca.paszamine.getBoundingClientRect().height+"px;background-color: "+colors.c_2+";"
 document.getElementById("body").appendChild(paszamine_s);
