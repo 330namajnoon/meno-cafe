@@ -132,7 +132,13 @@ socket.on("data_save_s",(database,data) => {
 //   paszamine   //
 ///////////////////
 ///////////////////
-
+window.addEventListener("resize" , () => {
+    paszamine.paszamine.style.width = innerWidth+"px";
+    paszamine.paszamine.style.height = innerHeight+"px";
+    paszamine.paszamine_s.innerHTML = "";
+    menolar = new Menolar();
+    console.log(paszamine.paszamine)
+})
 function Paszamine() {
     this.styles = {
         paszamine: ""+font+"width: "+innerWidth+"px;height: "+innerHeight+"px;float: left;",
@@ -189,6 +195,9 @@ function Paszamine() {
     })
     
 }
+Paszamine.prototype.style = function() {
+    this.paszamine.style.cssText = this.styles.paszamine;
+}
 Paszamine.prototype.Crate = function() {
     document.getElementById("body").innerHTML = "";
     document.getElementById("body").appendChild(this.paszamine);
@@ -242,6 +251,7 @@ function Menolar() {
     
 }
 Menolar.prototype.Crate = function() {
+
     paszamine.paszamine_s.appendChild(this.paszamine);
     this.meno.forEach(element => {
         this.paszamine.appendChild(element.paszamine);

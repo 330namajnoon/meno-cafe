@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Dancing+Script&family=Dosis:wght@500&family=Libre+Baskerville&family=Lora:ital@0;1&family=Merriweather:ital,wght@1,300&family=Oswald:wght@300&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Qwitcher+Grypen:wght@700&family=Roboto+Slab:wght@500&display=swap');
 body {
     margin: 0;
-    overflow: hidden;
+    /* overflow: hidden; */
 }
 
 #test {

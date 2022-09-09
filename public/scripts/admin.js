@@ -9,7 +9,7 @@ import{araye_element_remove,SerchId,ID_ara,CrateElement,AndazeBaraks,filter,Tari
 ////////////////////////
 let user = JSON.parse(localStorage.getItem("user"));
 
-let marca,paszamine_s,meno_ekle,menolar,urun_ekle,urunler,qrcodes,siparisler,kasa,users,tem;
+let navarabzar,marca,paszamine_s,meno_ekle,menolar,urun_ekle,urunler,qrcodes,siparisler,kasa,users,tem;
 
 let colors = {c_1: "#906A50",c_2: "#E5B480",c_3: "#4DDDE0",c_4: "#ADEBF0"};
 let font;
@@ -128,7 +128,10 @@ socket.on("user_siparis", ()=> {
 ////////////////////////
 let paszamine = CratePaszamine();
 window.addEventListener("resize", ()=> {
-    paszamine = CratePaszamine();
+    paszamine.style.width = innerWidth + "px";
+    paszamine.style.height = innerHeight + "px";
+    marca.style();
+    paszamine_s.style.cssText = ""+font+"position: absolute;width: "+(paszamine.getBoundingClientRect().width-filter(navarabzar.paszamine.style.width))+"px;height: "+(innerHeight-marca.paszamine.getBoundingClientRect().height)+"px;left: "+filter(navarabzar.paszamine.style.width)+"px;top: "+marca.paszamine.getBoundingClientRect().height+"px;background-color: "+colors.c_2+";"
 })
 function CratePaszamine() {
     let paszamine = CrateElement("div");
@@ -143,7 +146,7 @@ function CratePaszamine() {
 //    navar abzar    //
 ////////////////////////
 ////////////////////////
-let navarabzar;
+
 function NavarAbzar() {
     function Abzar(name) {
         let icon = CrateElement("span",name,"","material-symbols-rounded");
@@ -203,7 +206,7 @@ NavarAbzar.prototype.Crate = function() {
 function Marca(marca) {
    this.value = marca; 
    this.styles = {
-    paszamine: "border: solid .9vw "+colors.c_4+";"+font+"text-align: center;left:"+navarabzar.paszamine.getBoundingClientRect().width+"px;top:0;position: absolute;float: left;width: "+((innerWidth-filter(navarabzar.paszamine.style.width))*.963)+"px;height: auto;background-color: "+colors.c_1+";color: "+colors.c_4+";font-size:10vw;padding-top:5vw;padding-bottom:5vw",
+    paszamine: "border: solid .9vw "+colors.c_4+";"+font+"text-align: center;left:"+navarabzar.paszamine.getBoundingClientRect().width+"px;top:0;position: absolute;float: left;width: "+((paszamine.getBoundingClientRect().width-filter(navarabzar.paszamine.style.width))*.963)+"px;height: auto;background-color: "+colors.c_1+";color: "+colors.c_4+";font-size:10vw;padding-top:5vw;padding-bottom:5vw",
     marca: "position: absolute;font-size: 10vw;color: "+colors.c_4+";margin: 0;"
    }
    this.marca = CrateElement("h1",marca);
@@ -227,9 +230,26 @@ function Marca(marca) {
    }
   
 }
+Marca.prototype.style = function() {
+    this.marca.style.cssText = this.styles.marca;
+    this.paszamine.style.cssText = this.styles.paszamine;
+    if(this.marca.getBoundingClientRect().width > innerWidth/1.5) {
+
+        let val1 = innerWidth/1.5;
+        let val2 = this.marca.getBoundingClientRect().width;
+        let val3 = val2 / val1;
+        let val4 = this.paszamine.style.fontSize;
+        let val5 = Number(val4.replace("vw",""));
+        let val6 = val5 / val3;
+
+        this.paszamine.style.fontSize = val6+"vw";
+        
+    }
+}
 Marca.prototype.Crate = function() {
     document.getElementById("body").appendChild(this.paszamine);
     document.getElementById("body").appendChild(this.marca);
+    
 }
 window.addEventListener("click",() => {
     if(marca.paszamine.value !== user.marca) {
@@ -239,7 +259,7 @@ window.addEventListener("click",() => {
         socket.emit("data_save","admin_users",JSON.stringify(data));
         open(location.href);
     }
-    // navarabzar.elan.play();
+
 })
 
 
