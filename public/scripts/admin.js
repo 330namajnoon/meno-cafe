@@ -127,12 +127,12 @@ socket.on("user_siparis", ()=> {
 ////////////////////////
 ////////////////////////
 let paszamine = CratePaszamine();
-window.addEventListener("resize", ()=> {
-    paszamine.style.width = innerWidth + "px";
-    paszamine.style.height = innerHeight + "px";
-    marca.style();
-    paszamine_s.style.cssText = ""+font+"position: absolute;width: "+(paszamine.getBoundingClientRect().width-filter(navarabzar.paszamine.style.width))+"px;height: "+(innerHeight-marca.paszamine.getBoundingClientRect().height)+"px;left: "+filter(navarabzar.paszamine.style.width)+"px;top: "+marca.paszamine.getBoundingClientRect().height+"px;background-color: "+colors.c_2+";"
-})
+// window.addEventListener("resize", ()=> {
+//     paszamine.style.width = innerWidth + "px";
+//     paszamine.style.height = innerHeight + "px";
+//     marca.style();
+//     paszamine_s.style.cssText = ""+font+"position: absolute;width: "+(paszamine.getBoundingClientRect().width-filter(navarabzar.paszamine.style.width))+"px;height: "+(innerHeight-marca.paszamine.getBoundingClientRect().height)+"px;left: "+filter(navarabzar.paszamine.style.width)+"px;top: "+marca.paszamine.getBoundingClientRect().height+"px;background-color: "+colors.c_2+";"
+// })
 function CratePaszamine() {
     let paszamine = CrateElement("div");
     paszamine.style.width = innerWidth + "px";
