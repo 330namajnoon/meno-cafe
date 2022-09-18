@@ -387,7 +387,7 @@ function Menolar() {
         e.h1_div.style.top = ((e.paszamine.getBoundingClientRect().height/2)-(e.h1_div.getBoundingClientRect().height/2))+"px";
     });
     this.paszamine.style.cssText = " width: 100%;margin-top: "+(meno_ekle.ekle_icon.getBoundingClientRect().y+meno_ekle.ekle_icon.getBoundingClientRect().height)*.5+"px;overflow-y: scroll;"
-    this.paszamine.style.height = innerHeight-this.paszamine.getBoundingClientRect().y+"px";
+    this.paszamine.style.height = paszamine_s.getBoundingClientRect().height-this.paszamine.getBoundingClientRect().y+"px";
     
 }
 Menolar.prototype.Crate = function() {
@@ -654,7 +654,7 @@ function Urunler() {
         
     });
     this.paszamine.style.cssText = " width: 100%;margin-top: "+(urun_ekle.ekle_icon.getBoundingClientRect().y+urun_ekle.ekle_icon.getBoundingClientRect().height)*.6+"px;overflow-y: scroll;"
-    this.paszamine.style.height = innerHeight-this.paszamine.getBoundingClientRect().y+"px";
+    this.paszamine.style.height = paszamine_s.getBoundingClientRect().height-this.paszamine.getBoundingClientRect().y+"px";
     
 }
 Urunler.prototype.Crate = function() {
