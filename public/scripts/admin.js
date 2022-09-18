@@ -136,7 +136,7 @@ let paszamine = CratePaszamine();
 function CratePaszamine() {
     let paszamine = CrateElement("div");
     paszamine.style.width = innerWidth + "px";
-    paszamine.style.height = innerHeight + "px";
+    paszamine.style.height = innerHeight*1.5 + "px";
     document.getElementById("body").appendChild(paszamine);
     return paszamine;
 }
@@ -217,7 +217,7 @@ function Marca(marca) {
    this.paszamine.setAttribute("maxlength","15");
    this.Crate();
    if(this.marca.getBoundingClientRect().width > innerWidth/1.5) {
-
+        this.marca.style.display = "block";
         let val1 = innerWidth/1.5;
         let val2 = this.marca.getBoundingClientRect().width;
         let val3 = val2 / val1;
@@ -228,9 +228,11 @@ function Marca(marca) {
         this.paszamine.style.fontSize = val6+"vw";
         
    }
+   this.marca.style.display = "none";
   
 }
 Marca.prototype.style = function() {
+    this.marca.style.display = "block";
     this.marca.style.cssText = this.styles.marca;
     this.paszamine.style.cssText = this.styles.paszamine;
     if(this.marca.getBoundingClientRect().width > innerWidth/1.5) {
@@ -245,6 +247,7 @@ Marca.prototype.style = function() {
         this.paszamine.style.fontSize = val6+"vw";
         
     }
+    this.marca.style.display = "none";
 }
 Marca.prototype.Crate = function() {
     document.getElementById("body").appendChild(this.paszamine);
@@ -273,7 +276,7 @@ function MenoEkle () {
     this.ekle_icon = CrateElement("span","add_circle","","material-symbols-rounded");
     this.ekle_icon.style.cssText = "top: 2%;position: absolute;font-size: "+AndazeBaraks(15,15)+"px;color: "+colors.c_4+"";
     this.m_add_paszamine = CrateElement("div","","m_add_paszamine");
-    this.m_add_paszamine.style.cssText = "display: none;position: relative;width: 100%;height: 100%;background-color: rgba(255, 255, 255, 0.549);"
+    this.m_add_paszamine.style.cssText = "display: none;position: absolute;z-index: 1;width: 100%;height: 100%;background-color: rgba(255, 255, 255, 0.549);"
     this.m_add_paszamine_s = CrateElement("form","","m_add_paszamine_s");
     this.m_add_paszamine_s.style.cssText = "position: relative;float: left;width: 90%;height: 40vw;background-color: #adebf000;margin-left: 5%;margin-top: 20%;",
     this.text = CrateElement("input","","m_add_text","","text");
@@ -304,6 +307,7 @@ function MenoEkle () {
         e.stopPropagation();
         if (e.changedTouches[0].pageY < this.m_add_paszamine_s.getBoundingClientRect().y || e.changedTouches[0].pageY > this.m_add_paszamine_s.getBoundingClientRect().y+this.m_add_paszamine_s.getBoundingClientRect().height*1.5) {
             this.m_add_paszamine.style.display = "none";
+        
         }
     })
     this.ekle_icon.addEventListener("click",(e)=> {
@@ -399,7 +403,7 @@ function Menoedit (data) {
     this.m_add_paszamine = CrateElement("div","","m_add_paszamine");
     this.m_add_paszamine.style.background = "url("+data.img+")";
     this.m_add_paszamine.style.objectFit = "cover";
-    this.m_add_paszamine.style.cssText = "position: relative;width: 100%;height: 100%;background-color: rgba(255, 255, 255, 0.549);"
+    this.m_add_paszamine.style.cssText = "position: absolute;z-index: 1;width: 100%;height: 100%;background-color: rgba(255, 255, 255, 0.549);"
     this.m_add_paszamine_s = CrateElement("form","","m_add_paszamine_s");
     this.m_add_paszamine_s.style.cssText = "position: relative;float: left;width: 90%;height: auto;background-color: #adebf000;margin-left: 5%;margin-top: 20%;",
 
@@ -498,7 +502,7 @@ function UrunEkle () {
     this.ekle_icon = CrateElement("span","add_circle","","material-symbols-rounded");
     this.ekle_icon.style.cssText = "top: 2%;position: absolute;font-size: "+AndazeBaraks(15,15)+"px;color: "+colors.c_4+"";
     this.m_add_paszamine = CrateElement("div","","m_add_paszamine");
-    this.m_add_paszamine.style.cssText = "display: none;position: relative;width: 100%;height: 100%;background-color: rgba(255, 255, 255, 0.549);"
+    this.m_add_paszamine.style.cssText = "display: none;position: absolute;z-index: 1;width: 100%;height: 100%;background-color: rgba(255, 255, 255, 0.549);"
     this.m_add_paszamine_s = CrateElement("form","","m_add_paszamine_s");
     this.m_add_paszamine_s.style.cssText = "position: relative;float: left;width: 90%;height: auto;background-color: #adebf000;margin-left: 5%;margin-top: 20%;",
     ////// urun adi
@@ -904,8 +908,8 @@ function Siparisler() {
          this.sira_div3 = CrateElement("div");
          this.sira_div3.style.cssText = "float: left;width: 28%;height: 10vw;border: solid .5vw "+colors.c_1+";background-color: "+colors.c_4+";";
          this.sira_h13 = CrateElement("h1");
-         this.sira_h13.innerHTML = "Explicacion :";
-         this.sira_h13.style.cssText = "margin-top: 2.5vw;font-size: 4vw;color: "+colors.c_1+";";
+         this.sira_h13.innerHTML = "Explicacion:";
+         this.sira_h13.style.cssText = "margin-top: 2.5vw;font-size: 3vw;color: "+colors.c_1+";";
          //satir
          this.satir_div3 = CrateElement("div");
          this.satir_div3.style.cssText = "overflow-y: auto;float: left;width: 69%;height: 10vw;border: solid .5vw "+colors.c_1+";background-color: "+colors.c_4+";";
@@ -952,7 +956,7 @@ function Siparisler() {
              this.sira_div7 = CrateElement("div");
              this.sira_div7.style.cssText = "float: left;width: 28%;height: 10vw;border: solid .5vw "+colors.c_1+";background-color: "+colors.c_4+";";
              this.sira_h17 = CrateElement("h1");
-             this.sira_h17.innerHTML = "Numero de mesa :";
+             this.sira_h17.innerHTML = "Nu-mesa :";
              this.sira_h17.style.cssText = "margin-top: 2.5vw;font-size: 4vw;color: "+colors.c_1+";";
              //satir
              this.satir_div7 = CrateElement("div");
@@ -1347,7 +1351,7 @@ if (user !== null && sessionStorage.getItem("user") !== "") {
     document.getElementById("body").appendChild(paszamine_s);
     navarabzar = new NavarAbzar();
     marca = new Marca(user.marca);
-    paszamine_s.style.cssText = ""+font+"position: absolute;width: "+(innerWidth-filter(navarabzar.paszamine.style.width))+"px;height: "+(innerHeight-marca.paszamine.getBoundingClientRect().height)+"px;left: "+filter(navarabzar.paszamine.style.width)+"px;top: "+marca.paszamine.getBoundingClientRect().height+"px;background-color: "+colors.c_2+";"
+    paszamine_s.style.cssText = ""+font+"position: absolute;width: "+(innerWidth-filter(navarabzar.paszamine.style.width))+"px;height: "+(navarabzar.paszamine.getBoundingClientRect().height-marca.paszamine.getBoundingClientRect().height)+"px;left: "+filter(navarabzar.paszamine.style.width)+"px;top: "+marca.paszamine.getBoundingClientRect().height+"px;background-color: "+colors.c_2+";"
     socket.emit("data_load","tercume");
 }
 
