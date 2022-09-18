@@ -135,8 +135,6 @@ socket.on("data_save_s",(database,data) => {
 window.addEventListener("resize" , () => {
     paszamine.paszamine.style.width = innerWidth+"px";
     paszamine.paszamine.style.height = innerHeight+"px";
-    paszamine.paszamine_s.innerHTML = "";
-
 })
 function Paszamine() {
     this.styles = {
