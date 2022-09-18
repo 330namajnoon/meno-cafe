@@ -136,8 +136,7 @@ window.addEventListener("resize" , () => {
     paszamine.paszamine.style.width = innerWidth+"px";
     paszamine.paszamine.style.height = innerHeight+"px";
     paszamine.paszamine_s.innerHTML = "";
-    menolar = new Menolar();
-    console.log(paszamine.paszamine)
+
 })
 function Paszamine() {
     this.styles = {
